@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         ])->assignRole($doctorRole);
 
         User::create([
-            'name' => 'patient',
+            'name' => 'Patient',
             'email' => 'patient@example.com',
             'password' => Hash::make('12345678'),
         ])->assignRole($patientRole);

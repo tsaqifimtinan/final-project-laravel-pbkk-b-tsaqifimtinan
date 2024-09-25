@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
-class PatientController extends Controller
+class PatientController
 {
     public function index()
     {
-        $patients = Patient::all();
-        return view('tables.patients', compact('patients'));
+        $data[patients] = Patient::paginate(10);
+        return view('patient.index', compact('data'));
     }
 }

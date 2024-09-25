@@ -2,9 +2,9 @@
 
 @section('sidebar')
     @guest
-    <x-menu-tree title="Authentication" icon="fas fa-tachometer-alt" :active="request()->is('auth/*')">
-        <x-menu-item title="Login" icon="fas fa-user" href="login" :active="request()->is('auth/login')"></x-menu-item>
-        <x-menu-item title="Register" icon="fas fa-user" href="register" :active="request()->is('auth/login')"></x-menu-item>
+        <x-menu-tree title="Authentication" icon="fas fa-tachometer-alt" :active="request()->is('auth/*')">
+        <x-menu-item title="Login" icon="fas fa-user" href="{{ route('login') }}" :active="request()->is('login')"></x-menu-item>
+        <x-menu-item title="Register" icon="fas fa-user" href="{{ route('register') }}" :active="request()->is('register')"></x-menu-item>
     </x-menu-tree>
     @endguest
 
