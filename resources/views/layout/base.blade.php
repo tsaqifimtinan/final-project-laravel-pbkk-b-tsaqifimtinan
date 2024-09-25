@@ -1,14 +1,7 @@
 @extends('layout.template')
 
 @section('sidebar')
-    @guest
-        <x-menu-tree title="Authentication" icon="fas fa-tachometer-alt" :active="request()->is('auth/*')">
-        <x-menu-item title="Login" icon="fas fa-user" href="{{ route('login') }}" :active="request()->is('login')"></x-menu-item>
-        <x-menu-item title="Register" icon="fas fa-user" href="{{ route('register') }}" :active="request()->is('register')"></x-menu-item>
-    </x-menu-tree>
-    @endguest
-
-    <x-menu-tree title="Final Project ETS" icon="fas fa-tachometer-alt" :active="request()->is('pertemuan2/*')">
+    <x-menu-tree title="Hospital" icon="fas fa-tachometer-alt" :active="request()->is('pertemuan2/*')">
         <x-menu-item title="Appointments" icon="fas fa-calendar" href="{{ route('appointments') }}" :active="request()->is('appointments')"></x-menu-item>
         <x-menu-item title="Patients" icon="fas fa-user" href="{{ route('patients') }}" :active="request()->is('patients')"></x-menu-item>
         <x-menu-item title="Invoices" icon="fas fa-file-invoice" href="{{ route('invoices') }}" :active="request()->is('invoices')"></x-menu-item>

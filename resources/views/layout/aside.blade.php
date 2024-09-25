@@ -22,14 +22,6 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
                 <!-- Sample Item -->
-                <li class="nav-item">
-                    <a href="{{ route('users.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Index of Users
-                        </p>
-                    </a>
-                </li>
                 @yield('sidebar')
             </ul>
         </nav>
