@@ -1,7 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue'; // Your existing component
-import { Link } from '@inertiajs/vue3';
+import ManageDoctors from '@/Pages/Doctor/ManageDoctors.vue'; // Import the new component
 </script>
 
 <template>
@@ -9,7 +8,7 @@ import { Link } from '@inertiajs/vue3';
         <!-- Customize the header slot if needed -->
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+                Doctor
             </h2>
         </template>
 
@@ -23,19 +22,19 @@ import { Link } from '@inertiajs/vue3';
                         <h3 class="font-semibold text-lg mb-4">Menu</h3>
                         <ul class="space-y-2">
                             <li>
-                                <Link href="/doctors" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Doctor
-                                </Link>
+                            <router-link to="/doctors" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Doctor
+                            </router-link>
                             </li>
                             <li>
-                                <Link href="/profile" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Profile
-                                </Link>
+                            <router-link to="/profile" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Profile
+                            </router-link>
                             </li>
                             <li>
-                                <Link href="/settings" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Settings
-                                </Link>
+                            <router-link to="/settings" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Settings
+                            </router-link>
                             </li>
                             <!-- Add more sidebar links as needed -->
                         </ul>
@@ -43,14 +42,8 @@ import { Link } from '@inertiajs/vue3';
 
                     <!-- Main Content Section -->
                     <div class="col-span-3 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                        <!-- Add custom content for the dashboard -->
-                        <Welcome />
-                        
-                        <!-- Additional content or widgets can go here -->
-                        <div class="mt-8">
-                            <h3 class="text-lg font-semibold">Additional Dashboard Widgets</h3>
-                            <p>More dashboard content or widgets can be added here.</p>
-                        </div>
+                        <!-- Replace Welcome component with ManageDoctors component -->
+                        <ManageDoctors />
                     </div>
                 </div>
             </div>

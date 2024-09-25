@@ -45,6 +45,10 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::get('/doctors', function () {
+    return Inertia::render('Doctor/Manage');
+})->name('doctors.index');
+
 Route::resource('roles', RoleController::class);
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
 Route::get('/patients', [PatientController::class, 'index'])->name('patients');
