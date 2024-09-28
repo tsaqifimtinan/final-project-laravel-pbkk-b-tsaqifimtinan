@@ -21,7 +21,7 @@ class DoctorController
     public function update(Request $request, Doctor $doctor)
     {
         $doctor->update($request->all());
-        return response()->json($doctor); // Return JSON response
+        return response()->json($doctor);
     }
 
     public function destroy(Doctor $doctor)

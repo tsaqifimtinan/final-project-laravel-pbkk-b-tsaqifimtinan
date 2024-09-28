@@ -23,4 +23,10 @@ class UserController
     {
         return view('users.create');
     }
+
+    public function getUserRole(Request $request)
+    {
+        $user = Auth::user();
+        return response()->json(['role' => $user->role]);
+    }
 }

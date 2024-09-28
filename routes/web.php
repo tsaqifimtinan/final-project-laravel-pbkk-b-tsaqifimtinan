@@ -13,9 +13,6 @@ use App\Models\Kategori;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 
-// Route::get('/', function(){
-//     return view('auth.home');
-// });
 
 Route::get('/dashboard', function () {
     return view('layout.base');
@@ -48,6 +45,39 @@ Route::middleware([
 Route::get('/doctors', function () {
     return Inertia::render('Doctor/Manage');
 })->name('doctors.index');
+
+Route::get('/patients', function () {
+    return Inertia::render('Patient/Manage');
+})->name('patients.index');
+
+Route::get('/appointments', function () {
+    return Inertia::render('Appointment/Manage');
+})->name('appointments.index');
+
+Route::get('/invoices', function () {
+    return Inertia::render('Invoice/Manage');
+})->name('invoices.index');
+
+Route::get('/medications', function () {
+    return Inertia::render('Medication/Manage');
+})->name('medications.index');
+
+Route::get('/payments', function () {
+    return Inertia::render('Payment/Manage');
+})->name('payments.index');
+
+Route::get('/prescriptions', function () {
+    return Inertia::render('Prescription/Manage');
+})->name('prescriptions.index');
+
+Route::get('/rooms', function () {
+    return Inertia::render('Rooms/Manage');
+})->name('rooms.index');
+
+Route::get('/treatments', function () {
+    return Inertia::render('Treatment/Manage');
+})->name('treatments.index');
+
 
 Route::resource('roles', RoleController::class);
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');

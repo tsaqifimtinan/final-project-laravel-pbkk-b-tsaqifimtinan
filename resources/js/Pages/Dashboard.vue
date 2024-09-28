@@ -2,6 +2,59 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Welcome from '@/Components/Welcome.vue'; // Your existing component
 import { Link } from '@inertiajs/vue3';
+import { ref, computed, onMounted } from 'vue';
+
+// User role state
+const userRole = ref('');
+const isLoading = ref(true);
+const errorMessage = ref('');
+
+// Example links array
+const links = [
+  { href: '/doctors', text: 'Doctors' },
+  { href: '/patients', text: 'Patients' },
+  { href: '/appointments', text: 'Appointments' },
+  { href: '/invoices', text: 'Invoices' },
+  { href: '/medications', text: 'Medications' },
+  { href: '/payments', text: 'Payments' },
+  { href: '/prescriptions', text: 'Prescriptions' },
+  { href: '/rooms', text: 'Rooms' },
+  { href: '/treatments', text: 'Treatments' },
+];
+
+// Computed property to filter links based on user role
+const filteredLinks = computed(() => {
+  if (userRole.value === 'admin') {
+    return links;
+  } else if (userRole.value === 'doctor') {
+    return links.filter(link => ['Doctors', 'Patients'].includes(link.text));
+  } else if (userRole.value === 'patient') {
+    return links.filter(link => link.text === 'Doctors');
+  }
+  return [];
+});
+
+// Fetch user role from API or global state
+const fetchUserRole = async () => {
+  try {
+    console.log('Fetching user role...');
+    const response = await fetch('/api/user-role');
+    if (!response.ok) {
+      throw new Error('Failed to fetch user role');
+    }
+    const data = await response.json();
+    console.log('User role data:', data);
+    userRole.value = data.role; // Assuming the API returns { role: 'admin' | 'doctor' | 'patient' }
+    isLoading.value = false;
+  } catch (error) {
+    console.error('Error fetching user role:', error);
+    errorMessage.value = 'Failed to load user role. Please try again later.';
+    isLoading.value = false;
+  }
+};
+
+// Fetch user role on component mount
+onMounted(fetchUserRole);
 </script>
 
 <template>
@@ -24,17 +77,47 @@ import { Link } from '@inertiajs/vue3';
                         <ul class="space-y-2">
                             <li>
                                 <Link href="/doctors" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Doctor
+                                    Doctors
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/profile" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Profile
+                                <Link href="/patients" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Patients
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/settings" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Settings
+                                <Link href="/appointments" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Appointments
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/invoices" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Invoices
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/medications" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Medications
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/payments" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Payments
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/prescriptions" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Prescriptions
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/rooms" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Rooms
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/treatments" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Treatments
                                 </Link>
                             </li>
                             <!-- Add more sidebar links as needed -->
@@ -46,14 +129,13 @@ import { Link } from '@inertiajs/vue3';
                         <!-- Add custom content for the dashboard -->
                         <Welcome />
                         
-                        <!-- Additional content or widgets can go here -->
-                        <div class="mt-8">
-                            <h3 class="text-lg font-semibold">Additional Dashboard Widgets</h3>
-                            <p>More dashboard content or widgets can be added here.</p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Add any custom styles if needed */
+</style>

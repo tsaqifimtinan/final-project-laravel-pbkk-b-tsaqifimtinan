@@ -12,3 +12,5 @@ Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors', [DoctorController::class, 'store']);
 Route::put('/doctors/{doctors}', [DoctorController::class, 'update']);
 Route::delete('/doctors/{doctors}', [DoctorController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
