@@ -12,11 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Models\Kategori;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
-
-
-Route::get('/dashboard', function () {
-    return view('layout.base');
-})->name('dashboard');
+use App\Http\Controllers\SwaggerController;
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
@@ -81,6 +77,8 @@ Route::get('/treatments', function () {
 Route::get('/restfulapi', function () {
     return Inertia::render('RestfulAPI/Index');
 })->name('api.index');
+
+Route::get('/swagger', [SwaggerController::class, 'show']);
 
 Route::resource('roles', RoleController::class);
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');

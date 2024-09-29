@@ -4,6 +4,13 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Get(
+ *     path="/api/doctors",
+ *     @OA\Response(response="200", description="An doctors endpoint")
+ * )
+ */
+
 class DoctorController
 {
     public function index()

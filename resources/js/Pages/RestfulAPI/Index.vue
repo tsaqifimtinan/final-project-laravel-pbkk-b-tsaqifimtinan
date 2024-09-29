@@ -1,7 +1,12 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import ManageDoctors from '@/Pages/Doctor/ManageDoctors.vue'; // Import the new component
 import { Link } from '@inertiajs/vue3';
+</script>
+
+<script>
+export default {
+  name: 'SwaggerComponent',
+};
 </script>
 
 <template>
@@ -9,7 +14,7 @@ import { Link } from '@inertiajs/vue3';
         <!-- Customize the header slot if needed -->
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Doctor
+                API
             </h2>
         </template>
 
@@ -79,10 +84,16 @@ import { Link } from '@inertiajs/vue3';
                     <!-- Main Content Section -->
                     <div class="col-span-3 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
                         <!-- Replace Welcome component with ManageDoctors component -->
-                        <ManageDoctors />
+                        <iframe src="/swagger" width="100%" height="600px"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+iframe {
+  border: none;
+}
+</style>

@@ -74,7 +74,7 @@ import { Link } from '@inertiajs/vue3';
                             </li>
                             <!-- Add more sidebar links as needed -->
                         </ul>
-                    </aside>
+                    </aside>    
 
                     <!-- Main Content Section -->
                     <div class="col-span-3 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
