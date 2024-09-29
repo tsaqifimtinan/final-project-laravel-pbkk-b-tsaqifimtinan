@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Buku;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class NewBukuRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class NewBukuRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::user() && Auth::user()->hasRole('admin');
     }
 
     /**
@@ -25,6 +26,7 @@ class NewBukuRequest extends FormRequest
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
             'penerbit' => 'required|string|max:255',
+            'image_url' => 'required|url',
             'tahun_terbit' => 'nullable|integer',
             'jumlah_halaman' => 'nullable|integer',
             'isbn' => 'required|string|unique:buku,isbn|max:13',
