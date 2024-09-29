@@ -78,6 +78,9 @@ Route::get('/treatments', function () {
     return Inertia::render('Treatment/Manage');
 })->name('treatments.index');
 
+Route::get('/restfulapi', function () {
+    return Inertia::render('RestfulAPI/Index');
+})->name('api.index');
 
 Route::resource('roles', RoleController::class);
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');

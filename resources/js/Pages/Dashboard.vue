@@ -20,6 +20,7 @@ const links = [
   { href: '/prescriptions', text: 'Prescriptions' },
   { href: '/rooms', text: 'Rooms' },
   { href: '/treatments', text: 'Treatments' },
+  { href: '/restfulapi', text: 'Restful API' },
 ];
 
 // Computed property to filter links based on user role
@@ -118,6 +119,11 @@ onMounted(fetchUserRole);
                             <li>
                                 <Link href="/treatments" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                                     Treatments
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/restfulapi" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    API
                                 </Link>
                             </li>
                             <!-- Add more sidebar links as needed -->
