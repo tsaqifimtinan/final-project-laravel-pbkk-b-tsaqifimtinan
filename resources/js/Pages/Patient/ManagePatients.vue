@@ -33,6 +33,7 @@
           </td>
           <td class="py-2">
             <div v-if="editingPatientId === patient.id">
+<<<<<<< HEAD
               <input v-model="patient.date_of_birth" class="p-2 border rounded" />
             </div>
             <div v-else>
@@ -53,6 +54,12 @@
             </div>
             <div v-else>
               {{ patient.address }}
+=======
+              <input v-model="patient.age" class="p-2 border rounded" />
+            </div>
+            <div v-else>
+              {{ patient.age }}
+>>>>>>> 67fd99647dc6bbfc79f57a98b99e7b67e7255dae
             </div>
           </td>
           <td class="py-2">
@@ -78,7 +85,11 @@
     </table>
     <div class="mt-4">
       <button
+<<<<<<< HEAD
         @click="getPatients(currentPage - 1)"
+=======
+        @click="fetchPatients(currentPage - 1)"
+>>>>>>> 67fd99647dc6bbfc79f57a98b99e7b67e7255dae
         :disabled="currentPage === 1"
         class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
       >
@@ -86,7 +97,11 @@
       </button>
       <span class="mx-4">{{ currentPage }} of {{ totalPages }}</span>
       <button
+<<<<<<< HEAD
         @click="getPatients(currentPage + 1)"
+=======
+        @click="fetchPatients(currentPage + 1)"
+>>>>>>> 67fd99647dc6bbfc79f57a98b99e7b67e7255dae
         :disabled="currentPage === totalPages"
         class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
       >

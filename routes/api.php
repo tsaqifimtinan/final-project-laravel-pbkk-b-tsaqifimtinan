@@ -102,4 +102,9 @@ Route::post('/patients', [PatientController::class, 'store']);
 Route::put('/patients/{id}', [PatientController::class, 'update']);
 Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
 
+Route::get('/patients', [PatientController::class, 'index']);
+Route::post('/patients', [PatientController::class, 'store']);
+Route::put('/patients/{patients}', [PatientController::class, 'update']);
+Route::delete('/patients/{patients}', [PatientController::class, 'destroy']);
+
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
