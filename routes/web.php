@@ -39,11 +39,11 @@ Route::middleware([
 });
 
 Route::get('/doctors', function () {
-    return Inertia::render('Doctor/Manage');
+    return Inertia::render('Doctor/DoctorDashboard');
 })->name('doctors.index');
 
 Route::get('/patients', function () {
-    return Inertia::render('Patient/Manage');
+    return Inertia::render('Patient/PatientDashboard');
 })->name('patients.index');
 
 Route::get('/appointments', function () {
@@ -80,18 +80,11 @@ Route::get('/restfulapi', function () {
 
 Route::get('/swagger', [SwaggerController::class, 'show']);
 
-Route::resource('roles', RoleController::class);
-Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
-Route::get('/patients', [PatientController::class, 'index'])->name('patients');
-Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
-
 // Route::get('/register', [RegisterController::class,'show'])->name('register.create');
 // Route::post('/register', [RegisterController::class,'register'])->name('register.show');
 // Route::get('/login', [LoginController::class,'show'])->name('login');
 // Route::post('/login', [LoginController::class,'login'])->name('login.create');
 // Route::post('/logout', [LoginController::class,'logout'])->name('login.destroy');
-
-Route::get('/doctor', [DoctorController::class,'index'])->name('doctor.index');
 
 Route::fallback(function () {
     return redirect('/');

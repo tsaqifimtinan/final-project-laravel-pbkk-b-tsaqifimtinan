@@ -173,6 +173,12 @@ const deleteDoctor = async (id) => {
     await fetch(`/api/doctors/${id}`, {
       method: 'DELETE',
     });
+    if (!response.ok) {
+      console.error('Error deleting patient:', response.status, response.statusText);
+      const errorText = await response.text();
+      console.error('Error response text:', errorText);
+      return;
+    }
     doctors.value = doctors.value.filter(doctor => doctor.id !== id);
   } catch (error) {
     console.error('Error deleting doctor:', error);
