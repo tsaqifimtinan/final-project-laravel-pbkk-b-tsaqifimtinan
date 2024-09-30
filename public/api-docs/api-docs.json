@@ -5,109 +5,6 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/register": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Register a new user",
-                "requestBody": {
-                "required": true,
-                "content": {
-                    "application/json": {
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                        "name": {
-                            "type": "string",
-                            "example": "John Doe"
-                        },
-                        "email": {
-                            "type": "string",
-                            "format": "email",
-                            "example": "user@example.com"
-                        },
-                        "password": {
-                            "type": "string",
-                            "format": "password",
-                            "example": "password"
-                        },
-                        "password_confirmation": {
-                            "type": "string",
-                            "format": "password",
-                            "example": "password"
-                        }
-                        },
-                        "required": ["name", "email", "password", "password_confirmation"]
-                    }
-                    }
-                }
-                },
-                "responses": {
-                "201": {
-                    "description": "User registered successfully"
-                },
-                "422": {
-                    "description": "Validation error"
-                }
-                }
-            }
-            },
-            "/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Login a user",
-                "requestBody": {
-                "required": true,
-                    "content": {
-                        "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                            "email": {
-                                "type": "string",
-                                "format": "email",
-                                "example": "user@example.com"
-                            },
-                            "password": {
-                                "type": "string",
-                                "format": "password",
-                                "example": "password"
-                            }
-                            },
-                            "required": ["email", "password"]
-                        }   
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "User logged in successfully"
-                    },
-                    "401": {
-                        "description": "Invalid credentials"
-                    }
-                }
-            }
-            },
-            "/logout": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Logout a user",
-                "responses": {
-                    "200": {
-                        "description": "User logged out successfully"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                }
-            }
-        },
         "/api/doctors": {
             "get": {
                 "tags": [
@@ -117,38 +14,6 @@
                 "responses": {
                     "200": {
                         "description": "An doctors endpoint"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Doctors"
-                ],
-                "operationId": "2255e99c200415626fbc1a0e6c6ee80f",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "specialization": {
-                                        "type": "string"
-                                    },
-                                    "department_id": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Doctor created"
                     }
                 }
             }
@@ -214,7 +79,239 @@
                     }
                 }
             }
-        }
+        },
+        "/api/patients": {
+            "get": {
+                "tags": [
+                    "Patients"
+                ],
+                "operationId": "4a397b69598fdd620ee7120b8610185b",
+                "responses": {
+                    "200": {
+                        "description": "A patients endpoint"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Patients"
+                ],
+                "operationId": "d81c0f99b503153ba6d47c7899a882a4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "age": {
+                                        "type": "integer",
+                                        "example": 30
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "example": "Male"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Main St"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Patient created"
+                    }
+                }
+            }
+        },
+        "/api/patients/{patient}": {
+            "put": {
+                "tags": [
+                    "Patients"
+                ],
+                "operationId": "18504a6046ba0359d94ad6749b840931",
+                "parameters": [
+                    {
+                        "name": "patient",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "integer"
+                                    },
+                                    "gender": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Patient updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Patients"
+                ],
+                "operationId": "1c9bebd2827e52b62fb5467aaea126ca",
+                "parameters": [
+                    {
+                        "name": "patient",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Patient deleted"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                        "name": {
+                            "type": "string",
+                            "example": "John Doe"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email",
+                            "example": "user@example.com"
+                        },
+                        "password": {
+                            "type": "string",
+                            "format": "password",
+                            "example": "password"
+                        },
+                        "password_confirmation": {
+                            "type": "string",
+                            "format": "password",
+                            "example": "password"
+                        }
+                        },
+                        "required": ["name", "email", "password", "password_confirmation"]
+                    }
+                    }
+                }
+                },
+                "responses": {
+                "201": {
+                    "description": "User registered successfully"
+                },
+                "422": {
+                    "description": "Validation error"
+                },
+                "500": {
+                    "description": "Internal Server Error"
+                }
+                }
+            }
+            },
+            "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login a user",
+                "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                        "email": {
+                            "type": "string",
+                            "format": "email",
+                            "example": "user@example.com"
+                        },
+                        "password": {
+                            "type": "string",
+                            "format": "password",
+                            "example": "password"
+                        }
+                        },
+                        "required": ["email", "password"]
+                    }
+                    }
+                }
+                },
+                "responses": {
+                "200": {
+                    "description": "User logged in successfully"
+                },
+                "401": {
+                    "description": "Invalid credentials"
+                },
+                "500": {
+                    "description": "Internal Server Error"
+                }
+                }
+            }
+            },
+            "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout a user",
+                "responses": {
+                "200": {
+                    "description": "User logged out successfully"
+                },
+                "401": {
+                    "description": "Unauthorized"
+                },
+                "500": {
+                    "description": "Internal Server Error"
+                }
+                }
+            }
+            }
     },
     "components": {
         "securitySchemes": {
@@ -229,8 +326,13 @@
     },
     "tags": [
         {
-            "name": "Doctors",
-            "description": "Doctors"
+            "name": "Doctors"
+        },
+        {
+            "name": "Patients"
+        },
+        {
+            "name": "Auth"
         }
     ]
 }
