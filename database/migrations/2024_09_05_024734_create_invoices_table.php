@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->string('invoice_number');
             $table->text('description')->nullable();
-            $table->date('total_amount');
+            $table->integer('total_amount');
             $table->timestamps();
         });
     }

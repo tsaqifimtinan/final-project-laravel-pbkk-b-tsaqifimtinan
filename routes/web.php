@@ -80,6 +80,10 @@ Route::get('/restfulapi', function () {
 
 Route::get('/swagger', [SwaggerController::class, 'show']);
 
+Route::get('/dbconn', function() {
+    return view('dbconn');
+});
+
 // Route::get('/register', [RegisterController::class,'show'])->name('register.create');
 // Route::post('/register', [RegisterController::class,'register'])->name('register.show');
 // Route::get('/login', [LoginController::class,'show'])->name('login');

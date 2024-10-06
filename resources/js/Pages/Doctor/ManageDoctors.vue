@@ -8,12 +8,38 @@
       placeholder="Search doctors..."
       class="mb-4 p-2 border rounded"
     />
-    <button @click="addDoctor" class="mb-4 ml-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
+    <button @click="toggleAddDoctorForm" class="mb-4 ml-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
       Add Doctor
     </button>
+
+    <!-- Form for adding new doctor -->
+    <div v-if="isAddingDoctor" class="mb-6">
+      <h4 class="font-semibold mb-2">Add New Doctor</h4>
+      <form @submit.prevent="submitDoctorForm" enctype="multipart/form-data">
+        <div class="mb-4">
+          <label class="block text-gray-700">Name</label>
+          <input v-model="newDoctor.name" type="text" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Specialization</label>
+          <input v-model="newDoctor.specialization" type="text" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Photo</label>
+          <input @change="handleFileUpload" type="file" accept="image/*" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="flex space-x-4">
+          <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+          <button type="button" @click="cancelAddDoctor" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
     <table class="min-w-full bg-white">
       <thead>
         <tr>
+          <th class="py-2 text-left">Photo</th> <!-- New header for the photo -->
           <th class="py-2 text-left">Name</th>
           <th class="py-2 text-left">Specialization</th>
           <th class="py-2 text-left">Actions</th>
@@ -21,6 +47,13 @@
       </thead>
       <tbody>
         <tr v-for="doctor in filteredDoctors" :key="doctor.id">
+          <td class="py-2">
+            <img 
+              :src="doctor.photo" 
+              alt="Doctor's Photo" 
+              class="h-12 w-12 object-cover rounded-full" 
+            />
+          </td>
           <td class="py-2">
             <div v-if="editingDoctorId === doctor.id">
               <input v-model="doctor.name" class="p-2 border rounded" />
@@ -86,6 +119,14 @@ const currentPage = ref(1);
 const totalPages = ref(1);
 const searchQuery = ref('');
 const editingDoctorId = ref(null);
+const isAddingDoctor = ref(false);
+
+// New doctor form data
+const newDoctor = ref({
+  name: '',
+  specialization: '',
+  photo: null,
+});
 
 const fetchDoctors = async (page = 1) => {
   try {
@@ -107,27 +148,52 @@ const fetchDoctors = async (page = 1) => {
   }
 };
 
-const addDoctor = async () => {
-  const newDoctor = { name: 'New Doctor', specialization: 'New Specialization' };
+const toggleAddDoctorForm = () => {
+  isAddingDoctor.value = !isAddingDoctor.value;
+};
+
+// Handle file upload
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  newDoctor.value.photo = file; // Store the uploaded file
+};
+
+// Submit the form to add a new doctor
+const submitDoctorForm = async () => {
+  const formData = new FormData();
+  formData.append('name', newDoctor.value.name);
+  formData.append('specialization', newDoctor.value.specialization);
+  formData.append('photo', newDoctor.value.photo); // Add the file
+
   try {
     const response = await fetch('/api/doctors', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newDoctor),
+      body: formData, // Send formData
     });
+
     if (!response.ok) {
-      console.error('Error adding doctor:', response.status, response.statusText);
-      const errorText = await response.text();
-      console.error('Error response text:', errorText);
-      return;
+      throw new Error('Error adding doctor');
     }
+
     const data = await response.json();
-    doctors.value.push(data);
+    doctors.value.push(data); // Add the new doctor to the list
+    resetForm();
   } catch (error) {
     console.error('Error adding doctor:', error);
   }
+};
+
+// Reset the form after submission or cancel
+const resetForm = () => {
+  newDoctor.value.name = '';
+  newDoctor.value.specialization = '';
+  newDoctor.value.photo = null;
+  isAddingDoctor.value = false;
+};
+
+// Cancel adding a doctor
+const cancelAddDoctor = () => {
+  resetForm();
 };
 
 const editDoctor = (id) => {
