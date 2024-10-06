@@ -38,16 +38,45 @@ class DoctorController
      *     @OA\Response(response="201", description="Doctor created")
      * )
      */
-    public function store(NewDoctorRequest $request)
+    public function store(Request $request)
     {
         try {
-            $doctor = Doctor::create($request->validated());
-            return response()->json(new DoctorResource($doctor), 201);
-        } catch (\Exception $e) {
-            Log::error('Error creating doctor: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            // Validate the incoming request, including the photo
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'specialization' => 'required|string',
+                'department_id' => 'required|integer',
+                'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // validate image file
+            ]);
+
+            // Handle the photo upload
+            if ($request->hasFile('photo')) {
+                $photo = $request->file('photo');
+                $photoName = time() . '.' . $photo->getClientOriginalExtension();
+                $photo->move(public_path('photos'), $photoName); // Move the file to a public folder
+            }
+
+            // Store the data in the database, including the photo path
+            Doctor::create([
+                'name' => $validatedData['name'],
+                'specialization' => $validatedData['specialization'],
+                'department_id' => $validatedData['department_id'],
+                'photo' => $photoName, // Save the photo name/path in the database
+            ]);
+
+            // Return a success response
+            return response()->json([
+                'message' => 'Doctor added successfully',
+                'data' => $validatedData,
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Catch validation exceptions and return the errors
+            return response()->json([
+                'errors' => $e->errors(),
+            ], 422);
         }
     }
+
 
     /**
      * @OA\Put(

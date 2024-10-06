@@ -21,6 +21,10 @@
           <input v-model="newDoctor.name" type="text" class="p-2 border rounded w-full" required />
         </div>
         <div class="mb-4">
+          <label class="block text-gray-700">Department ID</label>
+          <input v-model="newDoctor.department_id" type="number" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="mb-4">
           <label class="block text-gray-700">Specialization</label>
           <input v-model="newDoctor.specialization" type="text" class="p-2 border rounded w-full" required />
         </div>
@@ -139,7 +143,13 @@ const fetchDoctors = async (page = 1) => {
     }
     const data = await response.json();
     console.log('API response:', data); // Log the API response
-    doctors.value = data.data; // Use data.data if paginated
+    doctors.value = data.data.map(doctor => {
+      return {
+        ...doctor,
+        photo: doctor.photo ? `/photos/${doctor.photo}` : null,
+      };
+    });
+
     currentPage.value = data.current_page;
     totalPages.value = data.last_page;
     console.log('Doctors array:', doctors.value); // Log the doctors array
@@ -152,35 +162,46 @@ const toggleAddDoctorForm = () => {
   isAddingDoctor.value = !isAddingDoctor.value;
 };
 
-// Handle file upload
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  newDoctor.value.photo = file; // Store the uploaded file
-};
-
 // Submit the form to add a new doctor
 const submitDoctorForm = async () => {
   const formData = new FormData();
   formData.append('name', newDoctor.value.name);
+  formData.append('department_id', newDoctor.value.department_id);
   formData.append('specialization', newDoctor.value.specialization);
-  formData.append('photo', newDoctor.value.photo); // Add the file
+
+  // Ensure the photo is correctly appended (this.selectedFile should be where the file is stored)
+  if (newDoctor.value.photo) {
+    formData.append('photo', newDoctor.value.photo);
+  }
 
   try {
     const response = await fetch('/api/doctors', {
       method: 'POST',
       body: formData, // Send formData
+      headers: {
+        // No need for Content-Type header here since fetch will set it automatically for FormData
+        // It must be left out to let the browser set it including boundary
+      },
     });
 
     if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Server error:', errorData);
       throw new Error('Error adding doctor');
     }
 
     const data = await response.json();
     doctors.value.push(data); // Add the new doctor to the list
-    resetForm();
+    resetForm(); // Clear the form after successful submission
   } catch (error) {
     console.error('Error adding doctor:', error);
   }
+};
+
+// Handle the file upload
+const handleFileUpload = (event) => {
+  const file = event.target.files[0]; // Get the file from the input
+  newDoctor.value.photo = file; // Assign the file to newDoctor.value.photo
 };
 
 // Reset the form after submission or cancel
@@ -257,9 +278,12 @@ const searchDoctors = () => {
 
 const filteredDoctors = computed(() => {
   return doctors.value.filter(doctor =>
+    // Ensure doctor.name exists and is a string before calling toLowerCase
+    (doctor.name && typeof doctor.name === 'string') &&
     doctor.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
+
 
 onMounted(() => fetchDoctors(currentPage.value));
 </script>

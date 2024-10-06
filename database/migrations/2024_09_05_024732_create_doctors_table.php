@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('specialization');
             $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

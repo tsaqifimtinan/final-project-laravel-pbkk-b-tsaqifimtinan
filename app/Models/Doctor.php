@@ -13,5 +13,6 @@ class Doctor extends Model
         'name',
         'specialization',
         'department_id',
+        'photo',
     ];
 }
