@@ -33,7 +33,6 @@
           </td>
           <td class="py-2">
             <div v-if="editingPatientId === patient.id">
-<<<<<<< HEAD
               <input v-model="patient.date_of_birth" class="p-2 border rounded" />
             </div>
             <div v-else>
@@ -48,21 +47,15 @@
               {{ patient.gender }}
             </div>
           </td>
-          <td class="py-2">
+          <td class="py-2 address-cell">
             <div v-if="editingPatientId === patient.id">
               <input v-model="patient.address" class="p-2 border rounded" />
             </div>
             <div v-else>
               {{ patient.address }}
-=======
-              <input v-model="patient.age" class="p-2 border rounded" />
-            </div>
-            <div v-else>
-              {{ patient.age }}
->>>>>>> 67fd99647dc6bbfc79f57a98b99e7b67e7255dae
             </div>
           </td>
-          <td class="py-2">
+          <td class="py-2 actions-cell">
             <div v-if="editingPatientId === patient.id">
               <button @click="savePatient(patient)" class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
                 Save
@@ -128,6 +121,7 @@ export default {
         patients.value = data.data;
         currentPage.value = data.current_page;
         totalPages.value = data.last_page;
+        console.log('Invoices array:', patients.value); // Log the Invoices array
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -251,5 +245,14 @@ export default {
 </script>
 
 <style scoped>
-/* Add your styles here */
+.address-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions-cell {
+  width: 150px;
+  text-align: left;
+}
 </style>

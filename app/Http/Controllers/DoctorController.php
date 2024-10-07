@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Doctor;
 use Illuminate\Http\Request;
-use App\Http\Requests\Buku\NewDoctorRequest;
 use App\Http\Resources\DoctorResource;
 
 class DoctorController
@@ -99,10 +98,55 @@ class DoctorController
      *     @OA\Response(response="200", description="Doctor updated")
      * )
      */
-    public function update(Request $request, Doctor $doctor)
+    public function update(Request $request, $id)
     {
-        $doctor->update($request->all());
-        return response()->json($doctor);
+        try {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'name' => 'sometimes|string|max:255',
+                'specialization' => 'sometimes|string|max:255',
+                'department_id' => 'sometimes|integer',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+    
+            // Find the doctor by ID
+            $doctor = Doctor::findOrFail($id);
+    
+            // Update the doctor's data
+            if (isset($validatedData['name'])) {
+                $doctor->name = $validatedData['name'];
+            }
+            if (isset($validatedData['specialization'])) {
+                $doctor->specialization = $validatedData['specialization'];
+            }
+            if (isset($validatedData['department_id'])) {
+                $doctor->department_id = $validatedData['department_id'];
+            }
+    
+            // Handle the photo upload if present
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('photos', 'public');
+                $doctor->photo = $photoPath;
+            }
+    
+            // Save the updated doctor data
+            $doctor->save();
+    
+            // Return the updated doctor data
+            return response()->json([
+                'message' => 'Doctor updated successfully',
+                'data' => $doctor,
+            ]);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error updating doctor: ' . $e->getMessage());
+    
+            // Return a JSON response with the error message
+            return response()->json([
+                'message' => 'Error updating doctor',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -120,7 +164,22 @@ class DoctorController
      */
     public function destroy(Doctor $doctor)
     {
-        $doctor->delete();
-        return response()->json(null, 204); // Return JSON response with 204 status code
+        try {
+            // Check if the doctor has a photo and delete it from the filesystem
+            if ($doctor->photo && file_exists(public_path('photos/' . $doctor->photo))) {
+                unlink(public_path('photos/' . $doctor->photo));
+            }
+
+            // Delete the doctor record from the database
+            $doctor->delete();
+
+            // Return a success response with 204 No Content status
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            // Catch any exceptions and return an error response
+            return response()->json([
+                'error' => 'Failed to delete doctor. Please try again.'
+            ], 500);
+        }
     }
 }

@@ -19,6 +19,7 @@ class CreatePatientsTable extends Migration
             $table->string('address');
             $table->string('phone');
             $table->string('email')->unique();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

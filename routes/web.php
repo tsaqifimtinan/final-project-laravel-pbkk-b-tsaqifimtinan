@@ -47,31 +47,31 @@ Route::get('/patients', function () {
 })->name('patients.index');
 
 Route::get('/appointments', function () {
-    return Inertia::render('Appointment/Manage');
+    return Inertia::render('Appointment/AppointmentDashboard');
 })->name('appointments.index');
 
 Route::get('/invoices', function () {
-    return Inertia::render('Invoice/Manage');
+    return Inertia::render('Invoice/InoviceDashboard');
 })->name('invoices.index');
 
 Route::get('/medications', function () {
-    return Inertia::render('Medication/Manage');
+    return Inertia::render('Medication/MedicationDashboard');
 })->name('medications.index');
 
 Route::get('/payments', function () {
-    return Inertia::render('Payment/Manage');
+    return Inertia::render('Payment/PaymentDashboard');
 })->name('payments.index');
 
 Route::get('/prescriptions', function () {
-    return Inertia::render('Prescription/Manage');
+    return Inertia::render('Prescription/PrescriptionDashboard');
 })->name('prescriptions.index');
 
 Route::get('/rooms', function () {
-    return Inertia::render('Rooms/Manage');
+    return Inertia::render('Rooms/RoomDashboard');
 })->name('rooms.index');
 
 Route::get('/treatments', function () {
-    return Inertia::render('Treatment/Manage');
+    return Inertia::render('Treatment/TreatmentDashboard');
 })->name('treatments.index');
 
 Route::get('/restfulapi', function () {
