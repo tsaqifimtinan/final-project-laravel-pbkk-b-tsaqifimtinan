@@ -43,8 +43,8 @@ import { Link } from '@inertiajs/vue3';
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/Rooms" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Rooms
+                                <Link href="/medications" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Medications
                                 </Link>
                             </li>
                             <li>

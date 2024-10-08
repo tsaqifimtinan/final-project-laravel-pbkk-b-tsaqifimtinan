@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="text-lg font-semibold mb-4">Manage payments</h3>
+        <h3 class="text-lg font-semibold mb-4">Manage Payments</h3>
         <input
         v-model="searchQuery"
         @input="searchPayments"
@@ -9,7 +9,7 @@
         class="mb-4 p-2 border rounded"
         />
         <button @click="toggleAddPaymentForm" class="mb-4 ml-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
-        Add payment
+        Add Payment
         </button>
 
         <!-- Form for adding new payment -->
@@ -44,9 +44,9 @@
         <thead>
             <tr>
             <th class="py-2 text-left">Patient ID</th>
-            <th class="py-2 text-left">Doctor ID</th>
-            <th class="py-2 text-left">payment Date</th>
-            <th class="py-2 text-left">payment_date</th>
+            <th class="py-2 text-left">Payment Method</th>
+            <th class="py-2 text-left">Description</th>
+            <th class="py-2 text-left">Payment Date</th>
             <th class="py-2 text-left">Actions</th>
             </tr>
         </thead>
