@@ -67,7 +67,7 @@ Route::get('/prescriptions', function () {
 })->name('prescriptions.index');
 
 Route::get('/rooms', function () {
-    return Inertia::render('Rooms/RoomDashboard');
+    return Inertia::render('Room/RoomDashboard');
 })->name('rooms.index');
 
 Route::get('/treatments', function () {

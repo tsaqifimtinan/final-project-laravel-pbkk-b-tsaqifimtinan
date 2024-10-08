@@ -9,7 +9,7 @@ import { Link } from '@inertiajs/vue3';
         <!-- Customize the header slot if needed -->
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Doctor
+                Doctors
             </h2>
         </template>
 

@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import ManageAppointments from '@/Pages/Appointment/ManageAppointments.vue'; // Import the new component
+import ManageRooms from '@/Pages/Room/ManageRooms.vue'; // Import the new component
 import { Link } from '@inertiajs/vue3';
 </script>
 
@@ -9,7 +9,7 @@ import { Link } from '@inertiajs/vue3';
         <!-- Customize the header slot if needed -->
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Appointment
+                Rooms
             </h2>
         </template>
 
@@ -43,8 +43,8 @@ import { Link } from '@inertiajs/vue3';
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/medications" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                    Medications
+                                <Link href="/Rooms" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    Rooms
                                 </Link>
                             </li>
                             <li>
@@ -78,8 +78,8 @@ import { Link } from '@inertiajs/vue3';
 
                     <!-- Main Content Section -->
                     <div class="col-span-3 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                        <!-- Replace Welcome component with ManageDoctors component -->
-                        <ManageAppointments />
+                        <!-- Replace Welcome component with ManageRooms component -->
+                        <ManageRooms />
                     </div>
                 </div>
             </div>

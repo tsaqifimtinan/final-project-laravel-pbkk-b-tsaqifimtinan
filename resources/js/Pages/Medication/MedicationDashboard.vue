@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import ManageMedication from '@/Pages/Medication/ManageMedication.vue'; // Import the new component
+import ManageMedications from '@/Pages/Medication/ManageMedications.vue'; // Import the new component
 import { Link } from '@inertiajs/vue3';
 </script>
 
@@ -9,7 +9,7 @@ import { Link } from '@inertiajs/vue3';
         <!-- Customize the header slot if needed -->
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Medication
+                Medications
             </h2>
         </template>
 
@@ -23,7 +23,7 @@ import { Link } from '@inertiajs/vue3';
                         <h3 class="font-semibold text-lg mb-4">Menu</h3>
                         <ul class="space-y-2">
                             <li>
-                                <Link href="/Medications" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                <Link href="/doctors" class="block p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                                     Doctors
                                 </Link>
                             </li>
@@ -78,8 +78,8 @@ import { Link } from '@inertiajs/vue3';
 
                     <!-- Main Content Section -->
                     <div class="col-span-3 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                        <!-- Replace Welcome component with ManageMedication component -->
-                        <ManageMedication />
+                        <!-- Replace Welcome component with ManageMedications component -->
+                        <ManageMedications />
                     </div>
                 </div>
             </div>

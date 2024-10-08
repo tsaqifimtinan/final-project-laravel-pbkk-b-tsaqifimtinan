@@ -126,11 +126,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed, onMounted } from 'vue';
 
-export default {
-  setup() {
     const patients = ref([]);
     const currentPage = ref(1);
     const totalPages = ref(1);
@@ -287,24 +285,6 @@ export default {
     });
 
     onMounted(() => getPatients(currentPage.value));
-
-    return {
-      patients,
-      currentPage,
-      totalPages,
-      searchQuery,
-      editingPatientId,
-      getPatients,
-      addPatients,
-      editPatient,
-      savePatient,
-      cancelEdit,
-      deletePatient,
-      searchPatients,
-      filteredPatients,
-    };
-  },
-};
 </script>
 
 <style scoped>
