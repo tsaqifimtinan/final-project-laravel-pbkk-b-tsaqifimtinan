@@ -63,7 +63,11 @@ class AppointmentController
     }
 
     public function destroy (Appointment $appointment) {
-        $appointment->delete();
-        return response()->json(['message' => 'Appointment deleted'], 204);
+        try {
+            $appointment->delete();
+            return response()->json(['message' => 'Appointment deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Appointment deletion failed'], 500);
+        }
     }
 }
