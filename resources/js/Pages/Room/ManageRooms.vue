@@ -32,6 +32,7 @@
         <thead>
             <tr>
             <th class="py-2 text-left">Patient ID</th>
+            <th class="py-2 text-left">Actions</th>
             </tr>
         </thead>
         <tbody>
