@@ -8,9 +8,39 @@
       placeholder="Search patients..."
       class="mb-4 p-2 border rounded"
     />
-    <button @click="addPatients" class="mb-4 ml-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
+    <button @click="toggleAddPatientForm" class="mb-4 ml-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
       Add Patient
     </button>
+
+    <div v-if="isAddingPatient" class="mb-6">
+      <h4 class="font-semibold mb-2">Add New Patient</h4>
+      <form @submit.prevent="submitPatientForm" enctype="multipart/form-data">
+        <div class="mb-4">
+          <label class="block text-gray-700">Name</label>
+          <input v-model="newPatient.name" type="text" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Date of Birth</label>
+          <input v-model="newPatient.date_of_birth" type="number" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Gender</label>
+          <input v-model="newPatient.gender" type="text" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Address</label>
+          <input v-model="newPatient.address" type="text" class="p-2 border rounded w-full" required />
+        </div>
+        <div class="flex space-x-4">
+          <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+          <button type="button" @click="cancelAddPatient" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+
     <table class="min-w-full bg-white">
       <thead>
         <tr>
@@ -106,6 +136,14 @@ export default {
     const totalPages = ref(1);
     const searchQuery = ref('');
     const editingPatientId = ref(null);
+    const isAddingPatient = ref(false);
+
+    const newPatient = ref({
+      name: '',
+      date_of_birth: '',
+      gender: '',
+      address: '',
+    });
 
     const getPatients = async (page = 1) => {
       try {
@@ -127,29 +165,48 @@ export default {
       }
     };
 
-    const addPatients = async () => {
-      const newPatient = { name: 'New Patient', specialization: 'New Specialization' };
+    const toggleAddPatientForm = () => {
+      isAddingPatient.value = !isAddingPatient.value;
+    };
+
+    const submitPatientForm = async () => {
+      const formData = new FormData();
+      formData.append('name', newPatient.value.name);
+      formData.append('date_of_birth', newPatient.value.date_of_birth);
+      formData.append('gender', newPatient.value.gender);
+      formData.append('address', newPatient.value.address);
+
       try {
-        const response = await fetch('/api/patients', {
+        const response = await fetch ('/api/patients', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newPatient),
+          body: formData,
         });
-        console.log('API request sent to /api/patients with POST method');
+
         if (!response.ok) {
           console.error('Error adding patient:', response.status, response.statusText);
           const errorText = await response.text();
           console.error('Error response text:', errorText);
           return;
         }
+
         const data = await response.json();
-        console.log('Patient added:', data);
         patients.value.push(data);
+        resetForm();
       } catch (error) {
         console.error('Error adding patient:', error);
       }
+    }
+
+    const resetForm = () => {
+      newPatient.value.name = '';
+      newPatient.value.date_of_birth = '';
+      newPatient.value.gender = '';
+      newPatient.value.address = '';
+      isAddingPatient.value = false;
+    };
+
+    const cancelAddPatient = () => {
+      resetForm();
     };
 
     const editPatient = (id) => {
@@ -159,32 +216,38 @@ export default {
     const savePatient = async (patient) => {
       try {
         console.log('Saving patient:', patient);
+
+        const formData = new FormData();
+        formData.append('name', patient.name);
+        formData.append('date_of_birth', patient.date_of_birth);
+        formData.append('gender', patient.gender);
+        formData.append('address', patient.address);
+
         const response = await fetch(`/api/patients/${patient.id}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: patient.name,
-            date_of_birth: patient.date_of_birth,
-            gender: patient.gender,
-            address: patient.address,
-            phone: patient.phone,
-            email: patient.email,
-          }),
+          body: formData,
         });
-        console.log('API request sent to /api/patients/' + patient.id + ' with PUT method');
+
         if (!response.ok) {
           console.error('Error saving patient:', response.status, response.statusText);
           const errorText = await response.text();
           console.error('Error response text:', errorText);
           return;
         }
+
         const data = await response.json();
-        console.log('Saved patient:', data);
+        console.log('API Response:', data);
+
         const index = patients.value.findIndex(p => p.id === patient.id);
-        patients.value[index] = data;
+        if (index !== -1) {
+          patients.value[index] = data;
+        } else {
+          patients.value.push(data);
+        }
+
         editingPatientId.value = null;
+
+        await getPatients(currentPage.value);
       } catch (error) {
         console.error('Error saving patient:', error);
       }

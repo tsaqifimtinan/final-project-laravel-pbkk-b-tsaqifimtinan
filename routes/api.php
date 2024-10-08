@@ -106,8 +106,8 @@ Route::delete('/doctors/{doctor}', [DoctorController::class, 'destroy']);
 
 Route::get('/patients', [PatientController::class, 'index']);
 Route::post('/patients', [PatientController::class, 'store']);
-Route::put('/patients/{patients}', [PatientController::class, 'update']);
-Route::delete('/patients/{patients}', [PatientController::class, 'destroy']);
+Route::put('/patients/{patient}', [PatientController::class, 'update']);
+Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
 
 Route::get('/appointments', [AppointmentController::class, 'index']);
 Route::post('/appointments', [AppointmentController::class, 'store']);

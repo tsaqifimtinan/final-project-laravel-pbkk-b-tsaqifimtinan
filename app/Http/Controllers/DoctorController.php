@@ -105,8 +105,7 @@ class DoctorController
             $validatedData = $request->validate([
                 'name' => 'sometimes|string|max:255',
                 'specialization' => 'sometimes|string|max:255',
-                'department_id' => 'sometimes|integer',
-                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'department_id' => 'sometimes|integer|exists:departments,id',
             ]);
     
             // Find the doctor by ID
@@ -125,12 +124,19 @@ class DoctorController
     
             // Handle the photo upload if present
             if ($request->hasFile('photo')) {
+                // Delete the old photo if it exists
+                if ($doctor->photo) {
+                    \Storage::disk('public')->delete($doctor->photo);
+                }
                 $photoPath = $request->file('photo')->store('photos', 'public');
                 $doctor->photo = $photoPath;
             }
     
             // Save the updated doctor data
             $doctor->save();
+    
+            // Log the updated doctor data
+            \Log::info('Updated doctor data:', $doctor->toArray());
     
             // Return the updated doctor data
             return response()->json([

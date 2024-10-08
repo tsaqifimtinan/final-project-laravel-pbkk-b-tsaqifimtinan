@@ -233,22 +233,18 @@ const editDoctor = (id) => {
 
 const saveDoctor = async (doctor) => {
   try {
-    console.log('Saving doctor:', doctor); // Log the doctor being saved
+    console.log('Saving doctor:', doctor);
 
-    // Prepare FormData for sending doctor data, including the optional photo
-    const formData = new FormData();
-    formData.append('name', doctor.name);
-    formData.append('specialization', doctor.specialization);
-    formData.append('department_id', doctor.department_id); // Assuming department is editable
-
-    if (doctor.photo) {
-      formData.append('photo', doctor.photo); // Append the photo file if it exists
-    }
-
-    // Send PUT request with FormData
     const response = await fetch(`/api/doctors/${doctor.id}`, {
       method: 'PUT',
-      body: formData, // Send the FormData object
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: doctor.name,
+        specialization: doctor.specialization,
+        department_id: doctor.department_id,
+      }),
     });
 
     if (!response.ok) {
@@ -259,25 +255,24 @@ const saveDoctor = async (doctor) => {
     }
 
     const data = await response.json();
-    console.log('Saved doctor response:', data); // Log the response from the server
+    console.log('Saved doctor response:', data);
 
-    // Update the doctors list with the saved doctor data
     const index = doctors.value.findIndex(d => d.id === doctor.id);
     if (index !== -1) {
       doctors.value[index] = {
         ...doctors.value[index],
         ...data,
-        photo: data.photo ? `/photos/${data.photo}` : doctors.value[index].photo,
-      }; // Update the specific doctor with the new data
+      };
+      console.log('Updated doctor in list:', doctors.value[index]);
     } else {
-      // If doctor is not in the list (unlikely in an edit case), add it
       doctors.value.push(data);
+      console.log('Added new doctor to list:', data);
     }
 
     editingDoctorId.value = null;
 
-    // Fetch the updated list of doctors
-    await fetchDoctors(currentPage.value); // Ensure fetchDoctors is awaited to update the state correctly
+    await fetchDoctors(currentPage.value);
+    console.log('Fetched updated list of doctors:', doctors.value);
 
   } catch (error) {
     console.error('Error saving doctor:', error);

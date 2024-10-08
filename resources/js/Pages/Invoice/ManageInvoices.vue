@@ -22,15 +22,15 @@
         </div>
         <div class="mb-4">
           <label class="block text-gray-700">Invoice Number</label>
-          <input v-model="newInvoice.department_id" type="string" class="p-2 border rounded w-full" required />
+          <input v-model="newInvoice.invoice_number" type="text" class="p-2 border rounded w-full" required />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700">Description</label>
-          <input v-model="newInvoice.specialization" type="text" class="p-2 border rounded w-full" required />
+          <input v-model="newInvoice.description" type="text" class="p-2 border rounded w-full" required />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700">Total Amount</label>
-          <input v-model="newInvoice.specialization" type="number" class="p-2 border rounded w-full" required />
+          <input v-model="newInvoice.total_amount" type="number" class="p-2 border rounded w-full" required />
         </div>
         <div class="flex space-x-4">
           <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
@@ -246,7 +246,7 @@ const saveInvoice = async (invoice) => {
     console.log('Saved Invoice response:', data); // Log the response from the server
 
     // Update the Invoices list with the saved Invoice data
-    const index = invoices.value.findIndex(d => d.id === Invoice.id);
+    const index = invoices.value.findIndex(d => d.id === invoice.id);
     if (index !== -1) {
         invoices.value[index] = {
         ...invoices.value[index],
@@ -300,9 +300,9 @@ const searchInvoices = () => {
 
 const filteredInvoices = computed(() => {
   return invoices.value.filter(invoice =>
-    // Ensure Invoice.name exists and is a string before calling toLowerCase
-    (invoice.name && typeof invoice.name === 'string') &&
-    invoice.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    // Ensure Invoice.description exists and is a string before calling toLowerCase
+    (invoice.description && typeof invoice.description === 'string') &&
+    invoice.description.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
