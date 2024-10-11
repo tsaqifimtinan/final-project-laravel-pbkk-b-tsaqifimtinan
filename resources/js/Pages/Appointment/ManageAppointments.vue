@@ -21,8 +21,8 @@
             <input v-model="newAppointment.patient_id" type="number" class="p-2 border rounded w-full" required />
             </div>
             <div class="mb-4">
-            <label class="block text-gray-700">Department ID</label>
-            <input v-model="newAppointment.appointment_id" type="number" class="p-2 border rounded w-full" required />
+            <label class="block text-gray-700">Doctor ID</label>
+            <input v-model="newAppointment.doctor_id" type="number" class="p-2 border rounded w-full" required />
             </div>
             <div class="mb-4">
             <label class="block text-gray-700">Appointment Date</label>
@@ -51,7 +51,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="appointment in filteredappointments" :key="appointment.id">
+            <tr v-for="appointment in filteredAppointments" :key="appointment.id">
             <td class="py-2">
                 <div v-if="editingAppointmentID === appointment.id">
                 <input v-model="appointment.patient_id" class="p-2 border rounded" />
@@ -78,9 +78,9 @@
             </td>
             <td class="py-2">
                 <div v-if="editingAppointmentID === appointment.id">
-                <input v-model="appointment.notes" class="p-2 border rounded" />
+                <input v-model="appointment.notes" :class="{'notes-overflow': isNotesOverflow(appointment.notes)}" class="p-2 border rounded" />
                 </div>
-                <div v-else>
+                <div v-else :class="{'notes-overflow': isNotesOverflow(appointment.notes)}">
                 {{ appointment.notes }}
                 </div>
             </td>
@@ -88,9 +88,6 @@
                 <div v-if="editingAppointmentID === appointment.id">
                 <button @click="saveAppointment(appointment)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                     Save
-                </button>
-                <button @click="cancelEdit" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-2">
-                    Cancel
                 </button>
                 </div>
                 <div v-else>
@@ -138,14 +135,14 @@ const isAddingAppointment = ref(false);
 // New Appointment form data
 const newAppointment = ref({
     patient_id: '',
-    Appointment_id: '',
+    doctor_id: '',
     appointment_date: '',
     notes: '',
 });
 
 const fetchAppointments = async (page = 1) => {
     try {
-        const response = await fetch (`/api/appointments?page=${page}`);
+        const response = await fetch(`/api/appointments?page=${page}`);
         if (!response.ok) {
             console.error('Error fetching appointments:', response.status, response.statusText);
             const errorText = await response.text();
@@ -168,18 +165,19 @@ const toggleAddAppointmentForm = () => {
 };
 
 const submitAppointmentForm = async () => {
-    const formData = new FormData();
-    formData.append('patient_id', newAppointment.value.patient_id);
-    formData.append('doctor_id', newAppointment.value.doctor_id);
-    formData.append('appointment_date', newAppointment.value.appointment_date);
-    formData.append('notes', newAppointment.value.notes);
+    const payload = {
+        patient_id: newAppointment.value.patient_id,
+        doctor_id: newAppointment.value.doctor_id,
+        appointment_date: newAppointment.value.appointment_date,
+        notes: newAppointment.value.notes
+    };
 
     try {
         const response = await fetch('/api/appointments', {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
-
+                'Content-Type': 'application/json'
             }
         });
 
@@ -191,7 +189,7 @@ const submitAppointmentForm = async () => {
         }
 
         const data = await response.json();
-        appointment.value.push(data);
+        appointments.value.push(data); // Assuming `appointments` is the correct variable
         console.log('API Response:', data);
         resetForm();
         isAddingAppointment.value = false;
@@ -222,17 +220,18 @@ const saveAppointment = async (appointment) => {
     try {
         console.log('Saving appointment:', appointment);
 
-        const formData = new FormData();
-        formData.append('patient_id', appointment.patient_id);
-        formData.append('doctor_id', appointment.doctor_id);
-        formData.append('appointment_date', appointment.appointment_date);
-        formData.append('notes', appointment.notes);
+        const payload = {
+            patient_id: appointment.patient_id,
+            doctor_id: appointment.doctor_id,
+            appointment_date: appointment.appointment_date,
+            notes: appointment.notes
+        };
 
         const response = await fetch(`/api/appointments/${appointment.id}`, {
             method: 'PUT',
-            body: formData,
+            body: JSON.stringify(payload),
             headers: {
-
+                'Content-Type': 'application/json'
             }
         });
 
@@ -249,8 +248,7 @@ const saveAppointment = async (appointment) => {
         const index = appointments.value.findIndex(a => a.id === appointment.id);
         if (index !== -1) {
             appointments.value[index] = data;
-        }
-        else {
+        } else {
             appointments.value.push(data);
         }
 
@@ -260,6 +258,11 @@ const saveAppointment = async (appointment) => {
         console.error('Error saving appointment:', error);
     }
 }
+
+const cancelEdit = () => {
+    editingAppointmentID.value = null;
+    fetchAppointments(currentPage.value);
+};
 
 const deleteAppointment = async (id) => {
     try {
@@ -285,18 +288,24 @@ const searchAppointments = () => {
     fetchAppointments(currentPage.value);
 }
 
-const filteredappointments = computed(() => {
+const filteredAppointments = computed(() => {
     return appointments.value.filter(appointment =>
-        appointment.patient_id.toString().includes(searchQuery.value) ||
-        appointment.doctor_id.toString().includes(searchQuery.value) ||
-        appointment.appointment_date.includes(searchQuery.value) ||
-        appointment.notes.toLowerCase().includes(searchQuery.value.toLowerCase())
+        (appointment.patient_id && appointment.patient_id.toString().includes(searchQuery.value)) ||
+        (appointment.doctor_id && appointment.doctor_id.toString().includes(searchQuery.value)) ||
+        (appointment.appointment_date && appointment.appointment_date.includes(searchQuery.value)) ||
+        (appointment.notes && appointment.notes.toLowerCase().includes(searchQuery.value.toLowerCase()))
     );
 });
+
+const isNotesOverflow = (notes) => {
+    return notes.length > 50; // Adjust the length as needed
+};
 
 onMounted(() => fetchAppointments(currentPage.value));
 </script>
 
 <style scoped>
-
+.notes-overflow {
+    font-size: 0.8rem; /* Adjust the font size as needed */
+}
 </style>

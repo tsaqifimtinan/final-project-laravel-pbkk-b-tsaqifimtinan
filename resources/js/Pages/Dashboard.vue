@@ -2,12 +2,6 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Welcome from '@/Components/Welcome.vue'; // Your existing component
 import { Link } from '@inertiajs/vue3';
-import { ref, computed, onMounted } from 'vue';
-
-// User role state
-const userRole = ref('');
-const isLoading = ref(true);
-const errorMessage = ref('');
 
 // Example links array
 const links = [
@@ -23,39 +17,6 @@ const links = [
   { href: '/restfulapi', text: 'Restful API' },
 ];
 
-// Computed property to filter links based on user role
-const filteredLinks = computed(() => {
-  if (userRole.value === 'admin') {
-    return links;
-  } else if (userRole.value === 'doctor') {
-    return links.filter(link => ['Doctors', 'Patients'].includes(link.text));
-  } else if (userRole.value === 'patient') {
-    return links.filter(link => link.text === 'Doctors');
-  }
-  return [];
-});
-
-// Fetch user role from API or global state
-const fetchUserRole = async () => {
-  try {
-    console.log('Fetching user role...');
-    const response = await fetch('/api/user-role');
-    if (!response.ok) {
-      throw new Error('Failed to fetch user role');
-    }
-    const data = await response.json();
-    console.log('User role data:', data);
-    userRole.value = data.role; // Assuming the API returns { role: 'admin' | 'doctor' | 'patient' }
-    isLoading.value = false;
-  } catch (error) {
-    console.error('Error fetching user role:', error);
-    errorMessage.value = 'Failed to load user role. Please try again later.';
-    isLoading.value = false;
-  }
-};
-
-// Fetch user role on component mount
-onMounted(fetchUserRole);
 </script>
 
 <template>

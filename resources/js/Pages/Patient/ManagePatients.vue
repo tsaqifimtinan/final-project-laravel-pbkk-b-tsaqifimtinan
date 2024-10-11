@@ -78,20 +78,17 @@
             </div>
           </td>
           <td class="py-2 address-cell">
-            <div v-if="editingPatientId === patient.id" @keyup.enter="savePatient(patient)">
-              <input v-model="patient.address" class="p-2 border rounded" />
-            </div>
-            <div v-else>
-              {{ patient.address }}
-            </div>
+              <div v-if="editingPatientId === patient.id" @keyup.enter="savePatient(patient)">
+                  <input v-model="patient.address" class="p-2 border rounded" />
+              </div>
+              <div v-else class="address-text">
+                  {{ patient.address }}
+              </div>
           </td>
           <td class="py-2 actions-cell">
             <div v-if="editingPatientId === patient.id">
-              <button @click="savePatient(patient)" class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+              <button @click="savePatient(patient)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Save
-              </button>
-              <button @click="cancelEdit" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-2">
-                Cancel
               </button>
             </div>
             <div v-else>
@@ -302,9 +299,18 @@ onMounted(() => getPatients(currentPage.value));
 
 <style scoped>
 .address-cell {
+  width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.address-text {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .actions-cell {

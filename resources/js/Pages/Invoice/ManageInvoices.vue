@@ -70,9 +70,9 @@
           </td>
           <td class="py-2">
             <div v-if="editingInvoiceId === invoice.id">
-              <input v-model="invoice.description" class="p-2 border rounded" />
+              <input v-model="invoice.description" :class="{'desc-overflow': isDescrptionOverflow(invoice.description)}" class="p-2 border rounded" />
             </div>
-            <div v-else>
+            <div v-else :class="{'desc-overflow': isDescrptionOverflow(invoice.description)}">
               {{ invoice.description }}
             </div>
           </td>
@@ -88,9 +88,6 @@
             <div v-if="editingInvoiceId === invoice.id">
               <button @click="saveInvoice(invoice)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Save
-              </button>
-              <button @click="cancelEdit" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-2">
-                Cancel
               </button>
             </div>
             <div v-else>
@@ -170,19 +167,19 @@ const toggleAddInvoiceForm = () => {
 
 // Submit the form to add a new Invoice
 const submitInvoiceForm = async () => {
-  const formData = new FormData();
-  formData.append('patient_id', newInvoice.value.patient_id);
-  formData.append('invoice_number', newInvoice.value.invoice_number);
-  formData.append('description', newInvoice.value.description);
-  formData.append('total_amount', newInvoice.value.total_amount);
+  const payload = {
+    patient_id: newInvoice.value.patient_id,
+    invoice_number: newInvoice.value.invoice_number,
+    description: newInvoice.value.description,
+    total_amount: newInvoice.value.total_amount,
+  };
 
   try {
     const response = await fetch('/api/invoices', {
       method: 'POST',
-      body: formData, // Send formData
+      body: JSON.stringify(payload), // Send JSON payload
       headers: {
-        // No need for Content-Type header here since fetch will set it automatically for FormData
-        // It must be left out to let the browser set it including boundary
+        'Content-Type': 'application/json', // Set Content-Type header to application/json
       },
     });
 
@@ -222,17 +219,21 @@ const saveInvoice = async (invoice) => {
   try {
     console.log('Saving Invoice:', invoice); // Log the Invoice being saved
 
-    // Prepare FormData for sending Invoice data, including the optional photo
-    const formData = new FormData();
-    formData.append('patient_id', invoice.patient_id);
-    formData.append('invoice_number', invoice.invoice_number);
-    formData.append('description', invoice.description);
-    formData.append('total_amount', invoice.total_amount);
+    // Prepare JSON payload for sending Invoice data
+    const payload = {
+      patient_id: invoice.patient_id,
+      invoice_number: invoice.invoice_number,
+      description: invoice.description,
+      total_amount: invoice.total_amount,
+    };
 
-    // Send PUT request with FormData
+    // Send PUT request with JSON payload
     const response = await fetch(`/api/invoices/${invoice.id}`, {
       method: 'PUT',
-      body: formData, // Send the FormData object
+      body: JSON.stringify(payload), // Send the JSON payload
+      headers: {
+        'Content-Type': 'application/json', // Set Content-Type header to application/json
+      },
     });
 
     if (!response.ok) {
@@ -248,7 +249,7 @@ const saveInvoice = async (invoice) => {
     // Update the Invoices list with the saved Invoice data
     const index = invoices.value.findIndex(d => d.id === invoice.id);
     if (index !== -1) {
-        invoices.value[index] = {
+      invoices.value[index] = {
         ...invoices.value[index],
         ...data,
       }; // Update the specific Invoice with the new data
@@ -306,9 +307,15 @@ const filteredInvoices = computed(() => {
   );
 });
 
+const isDescrptionOverflow = (description) => {
+    return description.length > 50; // Adjust the length as needed
+};
+
 onMounted(() => fetchInvoices(currentPage.value));
 </script>
 
 <style scoped>
-/* Add any custom styles if needed */
+.desc-overflow {
+    font-size: 0.8rem; /* Adjust the font size as needed */
+}
 </style>

@@ -88,9 +88,6 @@
               <button @click="saveDoctor(doctor)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Save
               </button>
-              <button @click="cancelEdit" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-2">
-                Cancel
-              </button>
             </div>
             <div v-else>
               <button @click="editDoctor(doctor.id)" class="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
