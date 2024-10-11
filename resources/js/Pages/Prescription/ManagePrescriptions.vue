@@ -2,125 +2,122 @@
     <div>
         <h3 class="text-lg font-semibold mb-4">Manage prescriptions</h3>
         <input
-        v-model="searchQuery"
-        @input="searchprescriptions"
-        type="text"
-        placeholder="Search prescriptions..."
-        class="mb-4 p-2 border rounded"
+            v-model="searchQuery"
+            @input="searchPrescriptions"
+            type="text"
+            placeholder="Search prescriptions..."
+            class="mb-4 p-2 border rounded"
         />
         <button @click="toggleAddPrescriptionForm" class="mb-4 ml-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
-        Add Prescription
+            Add Prescription
         </button>
 
         <!-- Form for adding new prescription -->
         <div v-if="isAddingPrescription" class="mb-6">
-        <h4 class="font-semibold mb-2">Add New Prescription</h4>
-        <form @submit.prevent="submitprescriptionForm" enctype="multipart/form-data">
-            <div class="mb-4">
-            <label class="block text-gray-700">Patient ID</label>
-            <input v-model="newPrescription.patient_id" type="number" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="mb-4">
-            <label class="block text-gray-700">Prescription Name</label>
-            <input v-model="newPrescription.prescription_name" type="number" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="mb-4">
-            <label class="block text-gray-700">Description</label>
-            <input v-model="newPrescription.description" type="date" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="mb-4">
-            <label class="block text-gray-700">Precription Date</label>
-            <input v-model="newPrescription.prescription_date" type="text" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="flex space-x-4">
-            <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
-            <button type="button" @click="cancelAddPrecription" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                Cancel
-            </button>
-            </div>
-        </form>
+            <h4 class="font-semibold mb-2">Add New Prescription</h4>
+            <form @submit.prevent="submitPrescriptionForm" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label class="block text-gray-700">Patient ID</label>
+                    <input v-model="newPrescription.patient_id" type="number" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Prescription Name</label>
+                    <input v-model="newPrescription.prescription_name" type="text" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Description</label>
+                    <input v-model="newPrescription.description" type="text" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Prescription Date</label>
+                    <input v-model="newPrescription.prescription_date" type="date" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="flex space-x-4">
+                    <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+                    <button type="button" @click="cancelAddPrescription" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
         <table class="min-w-full bg-white">
-        <thead>
-            <tr>
-            <th class="py-2 text-left">Patient ID</th>
-            <th class="py-2 text-left">Prescription Name</th>
-            <th class="py-2 text-left">Description</th>
-            <th class="py-2 text-left">Prescription Date</th>
-            <th class="py-2 text-left">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="prescription in filteredPrescriptions" :key="prescription.id">
-            <td class="py-2">
-                <div v-if="editingPrescriptionID === prescription.id">
-                <input v-model="prescription.patient_id" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ prescription.patient_id }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPrescriptionID === prescription.id">
-                <input v-model="prescription.prescription_name" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ prescription.prescription_name }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPrescriptionID === prescription.id">
-                <input v-model="prescription.description" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ prescription.description }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPrescriptionID === prescription.id">
-                <input v-model="prescription.prescription_date" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ prescription.prescription_date }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPrescriptionID === prescription.id">
-                <button @click="savePrescription(prescription)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                    Save
-                </button>
-                <button @click="cancelEdit" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-2">
-                    Cancel
-                </button>
-                </div>
-                <div v-else>
-                <button @click="editPrescription(prescription.id)" class="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                    Edit
-                </button>
-                <button @click="deletePrescription(prescription.id)" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 ml-2">
-                    Delete
-                </button>
-                </div>
-            </td>
-            </tr>
-        </tbody>
+            <thead>
+                <tr>
+                    <th class="py-2 text-left">Patient ID</th>
+                    <th class="py-2 text-left">Prescription Name</th>
+                    <th class="py-2 text-left">Description</th>
+                    <th class="py-2 text-left">Prescription Date</th>
+                    <th class="py-2 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="prescription in filteredPrescriptions" :key="prescription.id">
+                    <td class="py-2">
+                        <div v-if="editingPrescriptionID === prescription.id">
+                            <input v-model="prescription.patient_id" class="p-2 border rounded" />
+                        </div>
+                        <div v-else>
+                            {{ prescription.patient_id }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPrescriptionID === prescription.id">
+                            <input v-model="prescription.prescription_name" class="p-2 border rounded" />
+                        </div>
+                        <div v-else>
+                            {{ prescription.prescription_name }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPrescriptionID === prescription.id">
+                            <input v-model="prescription.description" :class="{'desc-overflow': isDescriptionOverflow(prescription.description)}" class="p-2 border rounded" />
+                        </div>
+                        <div v-else :class="{'desc-overflow': isDescriptionOverflow(prescription.description)}">
+                            {{ prescription.description }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPrescriptionID === prescription.id">
+                            <input v-model="prescription.prescription_date" class="p-2 border rounded" />
+                        </div>
+                        <div v-else>
+                            {{ prescription.prescription_date }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPrescriptionID === prescription.id">
+                            <button @click="savePrescription(prescription)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Save
+                            </button>
+                        </div>
+                        <div v-else>
+                            <button @click="editPrescription(prescription.id)" class="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                                Edit
+                            </button>
+                            <button @click="deletePrescription(prescription.id)" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 ml-2">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
         </table>
         <div class="mt-4">
-        <button
-            @click="fetchPrescriptions(currentPage - 1)"
-            :disabled="currentPage === 1"
-            class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-        >
-            Previous
-        </button>
-        <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
-        <button
-            @click="fetchPrescriptions(currentPage + 1)"
-            :disabled="currentPage === totalPages"
-            class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-        >
-            Next
-        </button>
+            <button
+                @click="fetchPrescriptions(currentPage - 1)"
+                :disabled="currentPage === 1"
+                class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+            >
+                Previous
+            </button>
+            <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button
+                @click="fetchPrescriptions(currentPage + 1)"
+                :disabled="currentPage === totalPages"
+                class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+            >
+                Next
+            </button>
         </div>
     </div>
 </template>
@@ -145,7 +142,7 @@ const newPrescription = ref({
 
 const fetchPrescriptions = async (page = 1) => {
     try {
-        const response = await fetch (`/api/prescriptions?page=${page}`);
+        const response = await fetch(`/api/prescriptions?page=${page}`);
         if (!response.ok) {
             console.error('Error fetching prescriptions:', response.status, response.statusText);
             const errorText = await response.text();
@@ -167,8 +164,8 @@ const toggleAddPrescriptionForm = () => {
     isAddingPrescription.value = !isAddingPrescription.value;
 };
 
-const submitprescriptionForm = async () => {
-    const prescriptionData = {
+const submitPrescriptionForm = async () => {
+    const payload = {
         patient_id: newPrescription.value.patient_id,
         prescription_name: newPrescription.value.prescription_name,
         description: newPrescription.value.description,
@@ -178,24 +175,20 @@ const submitprescriptionForm = async () => {
     try {
         const response = await fetch('/api/prescriptions', {
             method: 'POST',
+            body: JSON.stringify(payload), // Send JSON payload
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', // Set Content-Type header to application/json
             },
-            body: JSON.stringify(prescriptionData),
         });
 
         if (!response.ok) {
-            console.error('Error adding prescription:', response.status, response.statusText);
-            const errorText = await response.text();
-            console.error('Error response text:', errorText);
-            return;
+            const errorData = await response.json();
+            console.error('Server error:', errorData);
+            throw new Error('Error adding prescription');
         }
 
-        const data = await response.json();
-        prescription.value.push(data);
-        console.log('API Response:', data);
-        resetForm();
-        isAddingPrescription.value = false;
+        await fetchPrescriptions(currentPage.value); // Fetch the latest prescriptions after successful submission
+        resetForm(); // Clear the form after successful submission
     } catch (error) {
         console.error('Error adding prescription:', error);
     }
@@ -211,7 +204,7 @@ const resetForm = () => {
     isAddingPrescription.value = false;
 };
 
-const cancelAddPrecription = () => {
+const cancelAddPrescription = () => {
     resetForm();
 };
 
@@ -275,29 +268,36 @@ const deletePrescription = async (id) => {
             return;
         }
 
-        console.log('prescription deleted:', id);
+        console.log('Prescription deleted:', id);
         prescriptions.value = prescriptions.value.filter(a => a.id !== id);
     } catch (error) {
         console.error('Error deleting prescription:', error);
     }
-}
+};
 
-const searchprescriptions = () => {
+const searchPrescriptions = () => {
     fetchPrescriptions(currentPage.value);
-}
+};
 
 const filteredPrescriptions = computed(() => {
+    const query = searchQuery.value ?? '';
     return prescriptions.value.filter(prescription =>
-        prescription.patient_id.toString().includes(searchQuery.value) ||
-        prescription.prescription_name.toString().includes(searchQuery.value) ||
-        prescription.description.includes(searchQuery.value) ||
-        prescription.prescription_date.toLowerCase().includes(searchQuery.value.toLowerCase())
+        (prescription.patient_id?.toString() ?? '').includes(query) ||
+        (prescription.prescription_name?.toString() ?? '').includes(query) ||
+        (prescription.description ?? '').includes(query) ||
+        (prescription.prescription_date?.toLowerCase() ?? '').includes(query.toLowerCase())
     );
 });
+
+const isDescriptionOverflow = (description) => {
+    return description.length > 50;
+};
 
 onMounted(() => fetchPrescriptions(currentPage.value));
 </script>
 
 <style scoped>
-
+.desc-overflow {
+    font-size: 0.6rem;
+}
 </style>

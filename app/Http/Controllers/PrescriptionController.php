@@ -35,29 +35,30 @@ class PrescriptionController {
         }
     }
 
-    public function update (Request $request, $id) {
+    public function update(Request $request, $id) {
         try {
             $prescription = Prescription::findOrFail($id);
             $validatedData = $request->validate([
                 'patient_id' => 'required|integer',
-                'prescription_name' => 'required|integer',
+                'prescription_name' => 'required|string',
                 'prescription_date' => 'required|date',
                 'description' => 'nullable|string',
             ]);
-
+    
             $prescription->update([
                 'patient_id' => $validatedData['patient_id'],
                 'prescription_name' => $validatedData['prescription_name'],
                 'prescription_date' => $validatedData['prescription_date'],
                 'description' => $validatedData['description'],
             ]);
-
+    
             return response()->json([
                 'message' => 'Prescription updated',
                 'data' => $validatedData,
             ], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Prescription update failed'], 500);
+            \Log::error('Prescription update failed: ' . $e->getMessage());
+            return response()->json(['message' => 'Prescription update failed', 'error' => $e->getMessage()], 500);
         }
     }
 

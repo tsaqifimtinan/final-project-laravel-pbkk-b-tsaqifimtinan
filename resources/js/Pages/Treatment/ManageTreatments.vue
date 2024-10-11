@@ -15,22 +15,22 @@
         <!-- Form for adding new treatment -->
         <div v-if="isAddingTreatment" class="mb-6">
         <h4 class="font-semibold mb-2">Add New treatment</h4>
-        <form @submit.prevent="submitTreatmentForm" enctype="multipart/form-data">
+        <form @submit.prevent="submitTreatmentForm">
             <div class="mb-4">
             <label class="block text-gray-700">Patient ID</label>
             <input v-model="newTreatment.patient_id" type="number" class="p-2 border rounded w-full" required />
             </div>
             <div class="mb-4">
             <label class="block text-gray-700">treatment Name</label>
-            <input v-model="newTreatment.treatment_name" type="number" class="p-2 border rounded w-full" required />
+            <input v-model="newTreatment.treatment_name" type="text" class="p-2 border rounded w-full" required />
             </div>
             <div class="mb-4">
             <label class="block text-gray-700">Description</label>
-            <input v-model="newTreatment.description" type="date" class="p-2 border rounded w-full" required />
+            <input v-model="newTreatment.description" type="text" class="p-2 border rounded w-full" required />
             </div>
             <div class="mb-4">
             <label class="block text-gray-700">Precription Date</label>
-            <input v-model="newTreatment.treatment_date" type="text" class="p-2 border rounded w-full" required />
+            <input v-model="newTreatment.treatment_date" type="date" class="p-2 border rounded w-full" required />
             </div>
             <div class="flex space-x-4">
             <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
@@ -70,9 +70,9 @@
             </td>
             <td class="py-2">
                 <div v-if="editingtreatmentID === treatment.id">
-                <input v-model="treatment.description" class="p-2 border rounded" />
+                <input v-model="treatment.description" :class="{'desc-overflow': isDescriptionOverflow(treatment.description)}" class="p-2 border rounded" />
                 </div>
-                <div v-else>
+                <div v-else :class="{'desc-overflow': isDescriptionOverflow(treatment.description)}">
                 {{ treatment.description }}
                 </div>
             </td>
@@ -192,8 +192,10 @@ const submitTreatmentForm = async () => {
         }
 
         const data = await response.json();
-        treatment.value.push(data);
+        treatments.value.push(data);
         console.log('API Response:', data);
+
+        await fetchTreatments(currentPage.value);
         resetForm();
         isAddingTreatment.value = false;
     } catch (error) {
@@ -221,45 +223,45 @@ const editTreatments = (id) => {
 
 const saveTreatment = async (treatment) => {
     try {
-        console.log('Saving treatment:', treatment);
-
-        const treatmentData = {
-            patient_id: treatment.patient_id,
-            treatment_name: treatment.treatment_name,
-            description: treatment.description,
-            treatment_date: treatment.treatment_date,
-        };
-
         const response = await fetch(`/api/treatments/${treatment.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(treatmentData),
+            body: JSON.stringify({
+                patient_id: treatment.patient_id,
+                treatment_name: treatment.treatment_name,
+                description: treatment.description,
+                treatment_date: treatment.treatment_date,
+            }),
         });
 
         if (!response.ok) {
-            console.error('Error saving treatment:', response.status, response.statusText);
-            const errorText = await response.text();
-            console.error('Error response text:', errorText);
-            return;
+            throw new Error('An error occurred while saving the treatment');
         }
 
         const data = await response.json();
-        console.log('API Response:', data);
+        console.log('Updated treatment:', data);
 
-        const index = treatments.value.findIndex(a => a.id === treatment.id);
+        const index = treatments.value.findIndex(t => t.id === treatment.id);
         if (index !== -1) {
             treatments.value[index] = data;
+            console.log('Updated treatments array:', treatments.value);
         } else {
-            treatments.value.push(data);
+            console.error('Treatment not found in the array');
         }
 
         editingtreatmentID.value = null;
         await fetchTreatments(currentPage.value);
+        console.log('Treatments array after saving:', treatments.value);
     } catch (error) {
-        console.error('Error saving treatment:', error);
+        console.error(error);
     }
+};
+
+const cancelEdit = () => {
+    editingtreatmentID.value = null;
+    isAddingTreatment.value = false;
 };
 
 const deleteTreatments = async (id) => {
@@ -288,16 +290,23 @@ const searchTreatments = () => {
 
 const filteredTreatments = computed(() => {
     return treatments.value.filter(treatment =>
-        treatment.patient_id.toString().includes(searchQuery.value) ||
-        treatment.treatment_name.toString().includes(searchQuery.value) ||
-        treatment.description.includes(searchQuery.value) ||
-        treatment.treatment_date.toLowerCase().includes(searchQuery.value.toLowerCase())
+        treatment.patient_id?.toString().includes(searchQuery.value) ||
+        treatment.treatment_name?.toString().includes(searchQuery.value) ||
+        treatment.description?.includes(searchQuery.value) ||
+        treatment.treatment_date?.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
+
+const isDescriptionOverflow = (description) => {
+    return description.length > 50;
+};
 
 onMounted(() => fetchTreatments(currentPage.value));
 </script>
 
 <style scoped>
+.desc-overflow {
+    font-size: 0.8rem;
+}
 
 </style>

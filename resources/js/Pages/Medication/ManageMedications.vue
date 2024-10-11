@@ -15,7 +15,7 @@
         <!-- Form for adding new medication -->
         <div v-if="isAddingMedication" class="mb-6">
             <h4 class="font-semibold mb-2">Add New Medication</h4>
-            <form @submit.prevent="submitMedicationForm" enctype="multipart/form-data">
+            <form @submit.prevent="submitMedicationForm">
                 <div class="mb-4">
                     <label class="block text-gray-700">Patient ID</label>
                     <input v-model="newMedication.patient_id" type="text" class="p-2 border rounded w-full" required />
@@ -70,9 +70,9 @@
                     </td>
                     <td class="py-2">
                         <div v-if="editingMedicationId === medication.id">
-                            <input v-model="medication.description" class="p-2 border rounded" />
+                            <input v-model="medication.description" :class="{'desc-overflow': isDescriptionOverflow(medication.description)}" class="p-2 border rounded" />
                         </div>
-                        <div v-else>
+                        <div v-else :class="{'desc-overflow': isDescriptionOverflow(medication.description)}">
                             {{ medication.description }}
                         </div>
                     </td>
@@ -88,9 +88,6 @@
                         <div v-if="editingMedicationId === medication.id">
                             <button @click="saveMedication(medication)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                                 Save
-                            </button>
-                            <button @click="cancelEdit" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-2">
-                                Cancel
                             </button>
                         </div>
                         <div v-else>
@@ -165,7 +162,34 @@ const toggleAddMedicationForm = () => {
 };
 
 const submitMedicationForm = async () => {
-    // Implementation for submitting the form
+    const payload = {
+        patient_id: newMedication.value.patient_id,
+        medication_name: newMedication.value.medication_name,
+        description: newMedication.value.description,
+        medication_date: newMedication.value.medication_date,
+    };
+
+    try {
+        const response = await fetch('/api/medications', {
+            method: 'POST',
+            body: JSON.stringify(payload), // Send JSON payload
+            headers: {
+                'Content-Type': 'application/json', // Set Content-Type header to application/json
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Server error:', errorData);
+            throw new Error('Error adding medication');
+        }
+
+        const data = await response.json();
+        medications.value.push(data); // Add the new medication to the list
+        resetForm(); // Clear the form after successful submission
+    } catch (error) {
+        console.error('Error adding medication:', error);
+    }
 };
 
 const resetForm = () => {
@@ -257,15 +281,17 @@ const filteredMedications = computed(() => {
     });
 });
 
+const isDescriptionOverflow = (description) => {
+    return description && typeof description === 'string' && description.length > 40;
+};
+
 onMounted(() => {
     fetchMedications(currentPage.value);
 });
 </script>
 
 <style scoped>
-/* Your styles here */
-</style>
-
-<style scoped>
-
+.desc-overflow {
+    font-size: 0.8rem; /* Adjust the font size as needed */
+}
 </style>

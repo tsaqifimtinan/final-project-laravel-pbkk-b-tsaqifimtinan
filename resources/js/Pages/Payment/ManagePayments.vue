@@ -2,125 +2,122 @@
     <div>
         <h3 class="text-lg font-semibold mb-4">Manage Payments</h3>
         <input
-        v-model="searchQuery"
-        @input="searchPayments"
-        type="text"
-        placeholder="Search payments..."
-        class="mb-4 p-2 border rounded"
+            v-model="searchQuery"
+            @input="searchPayments"
+            type="text"
+            placeholder="Search payments..."
+            class="mb-4 p-2 border rounded"
         />
         <button @click="toggleAddPaymentForm" class="mb-4 ml-4 p-2 bg-green-500 text-white rounded hover:bg-green-600">
-        Add Payment
+            Add Payment
         </button>
 
         <!-- Form for adding new payment -->
         <div v-if="isAddingPayment" class="mb-6">
-        <h4 class="font-semibold mb-2">Add New Payment</h4>
-        <form @submit.prevent="submitPaymentForm" enctype="multipart/form-data">
-            <div class="mb-4">
-            <label class="block text-gray-700">Patient ID</label>
-            <input v-model="newPayment.patient_id" type="number" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="mb-4">
-            <label class="block text-gray-700">Payment Method</label>
-            <input v-model="newPayment.payment_method" type="number" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="mb-4">
-            <label class="block text-gray-700">Description</label>
-            <input v-model="newPayment.description" type="date" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="mb-4">
-            <label class="block text-gray-700">Payment Date</label>
-            <input v-model="newPayment.payment_date" type="text" class="p-2 border rounded w-full" required />
-            </div>
-            <div class="flex space-x-4">
-            <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
-            <button type="button" @click="cancelAddpayment" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                Cancel
-            </button>
-            </div>
-        </form>
+            <h4 class="font-semibold mb-2">Add New Payment</h4>
+            <form @submit.prevent="submitPaymentForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700">Patient ID</label>
+                    <input v-model="newPayment.patient_id" type="number" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Payment Method</label>
+                    <input v-model="newPayment.payment_method" type="text" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Description</label>
+                    <input v-model="newPayment.description" type="text" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Payment Date</label>
+                    <input v-model="newPayment.payment_date" type="date" class="p-2 border rounded w-full" required />
+                </div>
+                <div class="flex space-x-4">
+                    <button type="submit" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+                    <button type="button" @click="cancelAddpayment" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
         <table class="min-w-full bg-white">
-        <thead>
-            <tr>
-            <th class="py-2 text-left">Patient ID</th>
-            <th class="py-2 text-left">Payment Method</th>
-            <th class="py-2 text-left">Description</th>
-            <th class="py-2 text-left">Payment Date</th>
-            <th class="py-2 text-left">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="payment in filteredpayments" :key="payment.id">
-            <td class="py-2">
-                <div v-if="editingPaymentID === payment.id">
-                <input v-model="payment.patient_id" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ payment.patient_id }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPaymentID === payment.id">
-                <input v-model="payment.payment_method" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ payment.payment_method }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPaymentID === payment.id">
-                <input v-model="payment.description" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ payment.description }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPaymentID === payment.id">
-                <input v-model="payment.payment_date" class="p-2 border rounded" />
-                </div>
-                <div v-else>
-                {{ payment.payment_date }}
-                </div>
-            </td>
-            <td class="py-2">
-                <div v-if="editingPaymentID === payment.id">
-                <button @click="savePayment(payment)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                    Save
-                </button>
-                <button @click="cancelEdit" class="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-2">
-                    Cancel
-                </button>
-                </div>
-                <div v-else>
-                <button @click="editpayment(payment.id)" class="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                    Edit
-                </button>
-                <button @click="deletepayment(payment.id)" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 ml-2">
-                    Delete
-                </button>
-                </div>
-            </td>
-            </tr>
-        </tbody>
+            <thead>
+                <tr>
+                    <th class="py-2 text-left">Patient ID</th>
+                    <th class="py-2 text-left">Payment Method</th>
+                    <th class="py-2 text-left">Description</th>
+                    <th class="py-2 text-left">Payment Date</th>
+                    <th class="py-2 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="payment in filteredpayments" :key="payment.id">
+                    <td class="py-2">
+                        <div v-if="editingPaymentID === payment.id">
+                            <input v-model="payment.patient_id" class="p-2 border rounded" />
+                        </div>
+                        <div v-else>
+                            {{ payment.patient_id }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPaymentID === payment.id">
+                            <input v-model="payment.payment_method" class="p-2 border rounded" />
+                        </div>
+                        <div v-else>
+                            {{ payment.payment_method }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPaymentID === payment.id">
+                            <input v-model="payment.description" :class="{'desc-overflow': isDescriptionOverflow(payment.description)}" class="p-2 border rounded" />
+                        </div>
+                        <div v-else :class="{'desc-overflow': isDescriptionOverflow(payment.description)}">
+                            {{ payment.description }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPaymentID === payment.id">
+                            <input v-model="payment.payment_date" class="p-2 border rounded" />
+                        </div>
+                        <div v-else>
+                            {{ payment.payment_date }}
+                        </div>
+                    </td>
+                    <td class="py-2">
+                        <div v-if="editingPaymentID === payment.id">
+                            <button @click="savePayment(payment)" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Save
+                            </button>
+                        </div>
+                        <div v-else>
+                            <button @click="editpayment(payment.id)" class="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                                Edit
+                            </button>
+                            <button @click="deletepayment(payment.id)" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 ml-2">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
         </table>
         <div class="mt-4">
-        <button
-            @click="fetchPayments(currentPage - 1)"
-            :disabled="currentPage === 1"
-            class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-        >
-            Previous
-        </button>
-        <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
-        <button
-            @click="fetchPayments(currentPage + 1)"
-            :disabled="currentPage === totalPages"
-            class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-        >
-            Next
-        </button>
+            <button
+                @click="fetchPayments(currentPage - 1)"
+                :disabled="currentPage === 1"
+                class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+            >
+                Previous
+            </button>
+            <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button
+                @click="fetchPayments(currentPage + 1)"
+                :disabled="currentPage === totalPages"
+                class="p-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+            >
+                Next
+            </button>
         </div>
     </div>
 </template>
@@ -145,7 +142,7 @@ const newPayment = ref({
 
 const fetchPayments = async (page = 1) => {
     try {
-        const response = await fetch (`/api/payments?page=${page}`);
+        const response = await fetch(`/api/payments?page=${page}`);
         if (!response.ok) {
             console.error('Error fetching payments:', response.status, response.statusText);
             const errorText = await response.text();
@@ -192,7 +189,7 @@ const submitPaymentForm = async () => {
         }
 
         const data = await response.json();
-        payment.value.push(data);
+        payments.value.push(data);
         console.log('API Response:', data);
         resetForm();
         isAddingPayment.value = false;
@@ -275,29 +272,37 @@ const deletepayment = async (id) => {
             return;
         }
 
-        console.log('payment deleted:', id);
+        console.log('Payment deleted:', id);
         payments.value = payments.value.filter(a => a.id !== id);
     } catch (error) {
         console.error('Error deleting payment:', error);
     }
-}
+};
 
 const searchPayments = () => {
     fetchPayments(currentPage.value);
-}
+};
 
 const filteredpayments = computed(() => {
-    return payments.value.filter(payment =>
-        payment.patient_id.toString().includes(searchQuery.value) ||
-        payment.payment_method.toString().includes(searchQuery.value) ||
-        payment.description.includes(searchQuery.value) ||
-        payment.payment_date.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    return payments.value.filter(payment => {
+        return (
+            (payment.patient_id && payment.patient_id.toString().includes(searchQuery.value)) ||
+            (payment.payment_method && payment.payment_method.toString().includes(searchQuery.value)) ||
+            (payment.description && payment.description.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+            (payment.payment_date && payment.payment_date.toLowerCase().includes(searchQuery.value.toLowerCase()))
+        );
+    });
 });
+
+const isDescriptionOverflow = (description) => {
+    return description && typeof description === 'string' && description.length > 40;
+};
 
 onMounted(() => fetchPayments(currentPage.value));
 </script>
 
 <style scoped>
-
+.desc-overflow {
+    font-size: 0.8rem; /* Adjust the font size as needed */
+}
 </style>

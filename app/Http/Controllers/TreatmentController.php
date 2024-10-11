@@ -14,7 +14,7 @@ class TreatmentController {
         try {
             $validatedData = $request->validate([
                 'patient_id' => 'required|integer',
-                'treatment_name' => 'required|integer',
+                'treatment_name' => 'required|string',
                 'description' => 'nullable|string',
                 'treatment_date' => 'required|date',
             ]);
@@ -39,10 +39,10 @@ class TreatmentController {
         try {
             $treatment = Treatment::findOrFail($id);
             $validatedData = $request->validate([
-                'patient_id' => 'required|integer',
-                'treatment_name' => 'required|integer',
+                'patient_id' => 'sometimes|integer',
+                'treatment_name' => 'sometimes|string',
                 'description' => 'nullable|string',
-                'treatment_date' => 'required|date',
+                'treatment_date' => 'sometimes|date',
             ]);
 
             $treatment->update([
