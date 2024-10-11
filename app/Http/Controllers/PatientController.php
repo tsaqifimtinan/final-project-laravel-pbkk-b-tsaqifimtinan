@@ -38,14 +38,37 @@ class PatientController
      *     @OA\Response(response="201", description="Patient created")
      * )
      */
-    public function store(StorePatientRequest $request)
+    public function store(Request $request)
     {
         try {
-            $patient = Patient::create($request->validated());
-            return response()->json(new PatientResource($patient), 201);
+            // Validate the request data
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'date_of_birth' => 'required|date',
+                'gender' => 'required|string|max:10',
+                'address' => 'required|string|max:255',
+            ]);
+    
+            // Create a new patient with the validated data
+            $patient = Patient::create($validatedData);
+    
+            // Log the created patient data
+            \Log::info('Created patient data:', $patient->toArray());
+    
+            // Return the created patient data
+            return response()->json([
+                'message' => 'Patient created successfully',
+                'data' => $patient,
+            ], 201);
         } catch (\Exception $e) {
-            Log::error('Error creating patient: ' . $e->getMessage());
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            // Log the error
+            \Log::error('Error creating patient: ' . $e->getMessage());
+    
+            // Return a JSON response with the error message
+            return response()->json([
+                'message' => 'Error creating patient',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 

@@ -21,7 +21,7 @@
         </div>
         <div class="mb-4">
           <label class="block text-gray-700">Date of Birth</label>
-          <input v-model="newPatient.date_of_birth" type="number" class="p-2 border rounded w-full" required />
+          <input v-model="newPatient.date_of_birth" type="date" class="p-2 border rounded w-full" required />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700">Gender</label>
@@ -54,7 +54,7 @@
       <tbody>
         <tr v-for="patient in filteredPatients" :key="patient.id">
           <td class="py-2">
-            <div v-if="editingPatientId === patient.id">
+            <div v-if="editingPatientId === patient.id" @keyup.enter="savePatient(patient)">
               <input v-model="patient.name" class="p-2 border rounded" />
             </div>
             <div v-else>
@@ -62,7 +62,7 @@
             </div>
           </td>
           <td class="py-2">
-            <div v-if="editingPatientId === patient.id">
+            <div v-if="editingPatientId === patient.id" @keyup.enter="savePatient(patient)">
               <input v-model="patient.date_of_birth" class="p-2 border rounded" />
             </div>
             <div v-else>
@@ -70,7 +70,7 @@
             </div>
           </td>
           <td class="py-2">
-            <div v-if="editingPatientId === patient.id">
+            <div v-if="editingPatientId === patient.id" @keyup.enter="savePatient(patient)">
               <input v-model="patient.gender" class="p-2 border rounded" />
             </div>
             <div v-else>
@@ -78,7 +78,7 @@
             </div>
           </td>
           <td class="py-2 address-cell">
-            <div v-if="editingPatientId === patient.id">
+            <div v-if="editingPatientId === patient.id" @keyup.enter="savePatient(patient)">
               <input v-model="patient.address" class="p-2 border rounded" />
             </div>
             <div v-else>
@@ -129,108 +129,121 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-    const patients = ref([]);
-    const currentPage = ref(1);
-    const totalPages = ref(1);
-    const searchQuery = ref('');
-    const editingPatientId = ref(null);
-    const isAddingPatient = ref(false);
+const patients = ref([]);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const searchQuery = ref('');
+const editingPatientId = ref(null);
+const isAddingPatient = ref(false);
 
-    const newPatient = ref({
-      name: '',
-      date_of_birth: '',
-      gender: '',
-      address: '',
-    });
+const newPatient = ref({
+    name: '',
+    date_of_birth: '',
+    gender: '',
+    address: '',
+});
 
-    const getPatients = async (page = 1) => {
-      try {
+const getPatients = async (page = 1) => {
+    try {
         const response = await fetch(`/api/patients?page=${page}`);
         if (!response.ok) {
-          console.error('Error fetching patients:', response.status, response.statusText);
-          const errorText = await response.text();
-          console.error('Error response text:', errorText);
-          return;
-        } 
+            console.error('Error fetching patients:', response.status, response.statusText);
+            const errorText = await response.text();
+            console.error('Error response text:', errorText);
+            return;
+        }
         const data = await response.json();
         console.log('API Response:', data);
         patients.value = data.data;
         currentPage.value = data.current_page;
         totalPages.value = data.last_page;
-        console.log('Invoices array:', patients.value); // Log the Invoices array
-      } catch (error) {
+        console.log('Patients array:', patients.value); // Log the Patients array
+    } catch (error) {
         console.error('Error fetching patients:', error);
-      }
+    }
+};
+
+const toggleAddPatientForm = () => {
+    isAddingPatient.value = !isAddingPatient.value;
+};
+
+const submitPatientForm = async () => {
+    const patientData = {
+        name: newPatient.value.name,
+        date_of_birth: newPatient.value.date_of_birth,
+        gender: newPatient.value.gender,
+        address: newPatient.value.address,
     };
 
-    const toggleAddPatientForm = () => {
-      isAddingPatient.value = !isAddingPatient.value;
-    };
+    console.log('Submitting patient data:', patientData); // Log the data being sent
 
-    const submitPatientForm = async () => {
-      const formData = new FormData();
-      formData.append('name', newPatient.value.name);
-      formData.append('date_of_birth', newPatient.value.date_of_birth);
-      formData.append('gender', newPatient.value.gender);
-      formData.append('address', newPatient.value.address);
-
-      try {
-        const response = await fetch ('/api/patients', {
-          method: 'POST',
-          body: formData,
+    try {
+        const response = await fetch('/api/patients', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(patientData),
         });
 
         if (!response.ok) {
-          console.error('Error adding patient:', response.status, response.statusText);
-          const errorText = await response.text();
-          console.error('Error response text:', errorText);
-          return;
+            console.error('Error adding patient:', response.status, response.statusText);
+            const errorText = await response.text();
+            console.error('Error response text:', errorText);
+            return;
         }
 
         const data = await response.json();
-        patients.value.push(data);
+        console.log('Patient added:', data);
         resetForm();
-      } catch (error) {
+        await getPatients(currentPage.value); // Fetch the newest data and display the last opened page
+    } catch (error) {
         console.error('Error adding patient:', error);
-      }
     }
+};
 
-    const resetForm = () => {
-      newPatient.value.name = '';
-      newPatient.value.date_of_birth = '';
-      newPatient.value.gender = '';
-      newPatient.value.address = '';
-      isAddingPatient.value = false;
-    };
+const resetForm = () => {
+    newPatient.value.name = '';
+    newPatient.value.date_of_birth = '';
+    newPatient.value.gender = '';
+    newPatient.value.address = '';
+    isAddingPatient.value = false;
+};
 
-    const cancelAddPatient = () => {
-      resetForm();
-    };
+const cancelAddPatient = () => {
+    resetForm();
+};
 
-    const editPatient = (id) => {
-      editingPatientId.value = id;
-    };
+const editPatient = (id) => {
+    editingPatientId.value = id;
+};
 
-    const savePatient = async (patient) => {
-      try {
+const savePatient = async (patient) => {
+    try {
         console.log('Saving patient:', patient);
 
-        const formData = new FormData();
-        formData.append('name', patient.name);
-        formData.append('date_of_birth', patient.date_of_birth);
-        formData.append('gender', patient.gender);
-        formData.append('address', patient.address);
+        const patientData = {
+            name: patient.name,
+            date_of_birth: patient.date_of_birth,
+            gender: patient.gender,
+            address: patient.address,
+        };
+
+        console.log('Saving patient data:', patientData); // Log the data being sent
 
         const response = await fetch(`/api/patients/${patient.id}`, {
-          method: 'PUT',
-          body: formData,
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(patientData),
         });
 
         if (!response.ok) {
-          console.error('Error saving patient:', response.status, response.statusText);
-          const errorText = await response.text();
-          console.error('Error response text:', errorText);
-          return;
+            console.error('Error saving patient:', response.status, response.statusText);
+            const errorText = await response.text();
+            console.error('Error response text:', errorText);
+            return;
         }
 
         const data = await response.json();
@@ -238,53 +251,53 @@ import { ref, computed, onMounted } from 'vue';
 
         const index = patients.value.findIndex(p => p.id === patient.id);
         if (index !== -1) {
-          patients.value[index] = data;
+            patients.value[index] = data;
         } else {
-          patients.value.push(data);
+            patients.value.push(data);
         }
 
         editingPatientId.value = null;
 
         await getPatients(currentPage.value);
-      } catch (error) {
+    } catch (error) {
         console.error('Error saving patient:', error);
-      }
-    };
+    }
+};
 
-    const cancelEdit = () => {
-      editingPatientId.value = null;
-      getPatients(currentPage.value);
-    };
+const cancelEdit = () => {
+    editingPatientId.value = null;
+    getPatients(currentPage.value);
+};
 
-    const deletePatient = async (id) => {
-      try {
+const deletePatient = async (id) => {
+    try {
         const response = await fetch(`/api/patients/${id}`, {
-          method: 'DELETE',
+            method: 'DELETE',
         });
         console.log('API request sent to /api/patients/' + id + ' with DELETE method');
         if (!response.ok) {
-          console.error('Error deleting patient:', response.status, response.statusText);
-          const errorText = await response.text();
-          console.error('Error response text:', errorText);
-          return;
+            console.error('Error deleting patient:', response.status, response.statusText);
+            const errorText = await response.text();
+            console.error('Error response text:', errorText);
+            return;
         }
         patients.value = patients.value.filter(p => p.id !== id);
-      } catch (error) {
+    } catch (error) {
         console.error('Error deleting patient:', error);
-      }
-    };
+    }
+};
 
-    const searchPatients = () => {
-      getPatients(currentPage.value);
-    };
+const searchPatients = () => {
+    getPatients(currentPage.value);
+};
 
-    const filteredPatients = computed(() => {
-      return patients.value.filter(patient =>
-        patient.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-      );
-    });
+const filteredPatients = computed(() => {
+    return patients.value.filter(patient =>
+        patient.name && patient.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+});
 
-    onMounted(() => getPatients(currentPage.value));
+onMounted(() => getPatients(currentPage.value));
 </script>
 
 <style scoped>
