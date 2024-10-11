@@ -4,12 +4,41 @@ namespace App\Http\Controllers;
 use App\Models\Medication;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Medications",
+ *     description="API Endpoints for Medications"
+ * )
+ */
+
 class MedicationController {
+    /**
+     * @OA\Get(
+     *     path="/medications",
+     *     tags={"Medications"},
+     *     summary="Get list of medications",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function index() {
         $medications = Medication::paginate(10);
         return response()->json($medications);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/medications",
+     *     tags={"Medications"},
+     *     summary="Create a new medication",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Medication created"
+     *     )
+     * )
+     */
     public function store(Request $request) {
         try {
             $validatedData = $request->validate([
@@ -35,6 +64,23 @@ class MedicationController {
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/medications/{medication}",
+     *     tags={"Medications"},
+     *     summary="Update a medication",
+     *     @OA\Parameter(
+     *         name="medication",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Medication updated"
+     *     )
+     * )
+     */
     public function update (Request $request, $id) {
         try {
             $medication = Medication::findOrFail($id);
@@ -61,6 +107,23 @@ class MedicationController {
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/medications/{medication}",
+     *     tags={"Medications"},
+     *     summary="Delete a medication",
+     *     @OA\Parameter(
+     *         name="medication",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Medication deleted"
+     *     )
+     * )
+     */
     public function destroy($id) {
         try {
             $medication = Medication::findOrFail($id);

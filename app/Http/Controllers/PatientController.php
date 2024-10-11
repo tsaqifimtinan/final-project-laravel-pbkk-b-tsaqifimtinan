@@ -6,16 +6,26 @@ use Illuminate\Http\Request;
 use App\Http\Requests\NewPatientRequest;
 use App\Http\Resources\PatientResource;
 
+/**
+ * @OA\Tag(
+ *     name="Patients",
+ *     description="API Endpoints for Patients"
+ * )
+ */
 class PatientController
 {
     /**
      * @OA\Get(
-     *     path="/api/patients",
+     *     path="/patients",
      *     tags={"Patients"},
-     *     @OA\Response(response="200", description="A patients endpoint")
+     *     summary="Get list of patients",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
      * )
      */
-    public function index()
+        public function index()
     {
         $patients = Patient::paginate(10); // Paginate with 10 items per page
         return response()->json($patients); // Return JSON response
@@ -23,19 +33,13 @@ class PatientController
 
     /**
      * @OA\Post(
-     *     path="/api/patients",
+     *     path="/patients",
      *     tags={"Patients"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="name", type="string", example="John Doe"),
-     *             @OA\Property(property="age", type="integer", example=30),
-     *             @OA\Property(property="gender", type="string", example="Male"),
-     *             @OA\Property(property="address", type="string", example="123 Main St")
-     *         )
-     *     ),
-     *     @OA\Response(response="201", description="Patient created")
+     *     summary="Create a new patient",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Patient created"
+     *     )
      * )
      */
     public function store(Request $request)
@@ -74,25 +78,19 @@ class PatientController
 
     /**
      * @OA\Put(
-     *     path="/api/patients/{patient}",
+     *     path="/patients/{patient}",
      *     tags={"Patients"},
+     *     summary="Update a patient",
      *     @OA\Parameter(
      *         name="patient",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="name", type="string"),
-     *             @OA\Property(property="age", type="integer"),
-     *             @OA\Property(property="gender", type="string"),
-     *             @OA\Property(property="address", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response="200", description="Patient updated")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Patient updated"
+     *     )
      * )
      */
     public function update(Request $request, Patient $patient)
@@ -105,18 +103,22 @@ class PatientController
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
-
+        
     /**
      * @OA\Delete(
-     *     path="/api/patients/{patient}",
+     *     path="/patients/{patient}",
      *     tags={"Patients"},
+     *     summary="Delete a patient",
      *     @OA\Parameter(
      *         name="patient",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="204", description="Patient deleted")
+     *     @OA\Response(
+     *         response=204,
+     *         description="Patient deleted"
+     *     )
      * )
      */
     public function destroy(Patient $patient)

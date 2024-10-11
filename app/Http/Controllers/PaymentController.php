@@ -4,12 +4,40 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Payments",
+ *     description="API Endpoints for Payments"
+ * )
+ */
 class PaymentController {
+    /**
+     * @OA\Get(
+     *     path="/payments",
+     *     tags={"Payments"},
+     *     summary="Get list of payments",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function index () {
         $payments = Payment::paginate(10);
         return response()->json($payments);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/payments",
+     *     tags={"Payments"},
+     *     summary="Create a new payment",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Payment created"
+     *     )
+     * )
+     */
     public function store (Request $request) {
         try {
             $validatedData = $request->validate([
@@ -35,6 +63,23 @@ class PaymentController {
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/payments/{payment}",
+     *     tags={"Payments"},
+     *     summary="Update a payment",
+     *     @OA\Parameter(
+     *         name="payment",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment updated"
+     *     )
+     * )
+     */
     public function update (Request $request, $id) {
         try {
             $payment = Payment::findOrFail($id);
@@ -61,6 +106,23 @@ class PaymentController {
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/payments/{payment}",
+     *     tags={"Payments"},
+     *     summary="Delete a payment",
+     *     @OA\Parameter(
+     *         name="payment",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Payment deleted"
+     *     )
+     * )
+     */
     public function destroy($id) {
         try {
             $payment = Payment::findOrFail($id);

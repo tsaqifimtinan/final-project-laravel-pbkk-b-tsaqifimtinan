@@ -4,12 +4,40 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Rooms",
+ *     description="API Endpoints for Rooms"
+ * )
+ */
 class RoomController {
+    /**
+     * @OA\Get(
+     *     path="/rooms",
+     *     tags={"Rooms"},
+     *     summary="Get list of rooms",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function index() {
         $rooms = Room::paginate(10);
         return response()->json($rooms);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/rooms",
+     *     tags={"Rooms"},
+     *     summary="Create a new room",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Room created"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -31,6 +59,23 @@ class RoomController {
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/rooms/{room}",
+     *     tags={"Rooms"},
+     *     summary="Update a room",
+     *     @OA\Parameter(
+     *         name="room",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Room updated"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -78,6 +123,23 @@ class RoomController {
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/rooms/{room}",
+     *     tags={"Rooms"},
+     *     summary="Delete a room",
+     *     @OA\Parameter(
+     *         name="room",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Room deleted"
+     *     )
+     * )
+     */
     public function destroy($id) {
         try {
             $room = Room::findOrFail($id);

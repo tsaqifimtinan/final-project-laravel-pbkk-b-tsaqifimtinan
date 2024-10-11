@@ -308,5 +308,4 @@ onMounted(() => fetchTreatments(currentPage.value));
 .desc-overflow {
     font-size: 0.8rem;
 }
-
 </style>

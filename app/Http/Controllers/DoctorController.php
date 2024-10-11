@@ -5,13 +5,23 @@ use App\Models\Doctor;
 use Illuminate\Http\Request;
 use App\Http\Resources\DoctorResource;
 
+/**
+ * @OA\Tag(
+ *     name="Doctors",
+ *     description="API Endpoints for Doctors"
+ * )
+ */
 class DoctorController
 {
     /**
      * @OA\Get(
-     *     path="/api/doctors",
+     *     path="/doctors",
      *     tags={"Doctors"},
-     *     @OA\Response(response="200", description="An doctors endpoint")
+     *     summary="Get list of doctors",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
      * )
      */
     public function index()
@@ -22,19 +32,13 @@ class DoctorController
 
     /**
      * @OA\Post(
-     *     path="/api/doctors",
+     *     path="/doctors",
      *     tags={"Doctors"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="id", type="integer"),
-     *             @OA\Property(property="name", type="string"),
-     *             @OA\Property(property="specialization", type="string")
-     *             @OA\Property(property="department_id", type="integer"),
-     *         )
-     *     ),
-     *     @OA\Response(response="201", description="Doctor created")
+     *     summary="Create a new doctor",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Doctor created"
+     *     )
      * )
      */
     public function store(Request $request)
@@ -76,26 +80,21 @@ class DoctorController
         }
     }
 
-
     /**
      * @OA\Put(
-     *     path="/api/doctors/{doctor}",
+     *     path="/doctors/{doctor}",
      *     tags={"Doctors"},
+     *     summary="Update a doctor",
      *     @OA\Parameter(
      *         name="doctor",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="name", type="string"),
-     *             @OA\Property(property="specialization", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(response="200", description="Doctor updated")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Doctor updated"
+     *     )
      * )
      */
     public function update(Request $request, $id)
@@ -157,15 +156,19 @@ class DoctorController
 
     /**
      * @OA\Delete(
-     *     path="/api/doctors/{doctor}",
+     *     path="/doctors/{doctor}",
      *     tags={"Doctors"},
+     *     summary="Delete a doctor",
      *     @OA\Parameter(
      *         name="doctor",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response="204", description="Doctor deleted")
+     *     @OA\Response(
+     *         response=204,
+     *         description="Doctor deleted"
+     *     )
      * )
      */
     public function destroy(Doctor $doctor)

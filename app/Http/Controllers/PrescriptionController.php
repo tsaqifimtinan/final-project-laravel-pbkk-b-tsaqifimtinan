@@ -4,12 +4,40 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Prescriptions",
+ *     description="API Endpoints for Prescriptions"
+ * )
+ */
 class PrescriptionController {
+    /**
+     * @OA\Get(
+     *     path="/prescriptions",
+     *     tags={"Prescriptions"},
+     *     summary="Get list of prescriptions",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function index() {
         $prescriptions = Prescription::paginate(10);
         return response()->json($prescriptions);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/prescriptions",
+     *     tags={"Prescriptions"},
+     *     summary="Create a new prescription",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Prescription created"
+     *     )
+     * )
+     */
     public function store (Request $request) {
         try {
             $validatedData = $request->validate([
@@ -35,6 +63,23 @@ class PrescriptionController {
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/prescriptions/{prescription}",
+     *     tags={"Prescriptions"},
+     *     summary="Update a prescription",
+     *     @OA\Parameter(
+     *         name="prescription",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Prescription updated"
+     *     )
+     * )
+     */
     public function update(Request $request, $id) {
         try {
             $prescription = Prescription::findOrFail($id);
@@ -62,6 +107,23 @@ class PrescriptionController {
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/prescriptions/{prescription}",
+     *     tags={"Prescriptions"},
+     *     summary="Delete a prescription",
+     *     @OA\Parameter(
+     *         name="prescription",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Prescription deleted"
+     *     )
+     * )
+     */
     public function destroy(Prescription $prescription) {
         try {
             $prescription->delete();

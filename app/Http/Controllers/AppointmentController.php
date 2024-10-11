@@ -4,13 +4,41 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Appointments",
+ *     description="API Endpoints for Appointments"
+ * )
+ */
 class AppointmentController
 {
+    /**
+     * @OA\Get(
+     *     path="/appointments",
+     *     tags={"Appointments"},
+     *     summary="Get list of appointments",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function index() {
         $appointments = Appointment::paginate(10);
         return response()->json($appointments);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/appointments",
+     *     tags={"Appointments"},
+     *     summary="Create a new appointment",
+     *     @OA\Response(
+     *         response=201,
+     *         description="Appointment created"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -45,6 +73,23 @@ class AppointmentController
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/appointments/{appointment}",
+     *     tags={"Appointments"},
+     *     summary="Update an appointment",
+     *     @OA\Parameter(
+     *         name="appointment",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Appointment updated"
+     *     )
+     * )
+     */
     public function update (Request $request, $id) {
         try {
             $appointment = Appointment::findOrFail($id);
@@ -71,6 +116,23 @@ class AppointmentController
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/appointments/{appointment}",
+     *     tags={"Appointments"},
+     *     summary="Delete an appointment",
+     *     @OA\Parameter(
+     *         name="appointment",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Appointment deleted"
+     *     )
+     * )
+     */
     public function destroy (Appointment $appointment) {
         try {
             $appointment->delete();

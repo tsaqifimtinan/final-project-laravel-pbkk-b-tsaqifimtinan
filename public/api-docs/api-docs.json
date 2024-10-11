@@ -5,25 +5,111 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/doctors": {
+        "/appointments": {
             "get": {
                 "tags": [
-                    "Doctors"
+                    "Appointments"
                 ],
-                "operationId": "f2faa955668b3e6887792008f2d09661",
+                "summary": "Get list of appointments",
+                "operationId": "c68dab577f29c04c4422e6cb86fa36ce",
                 "responses": {
                     "200": {
-                        "description": "An doctors endpoint"
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Create a new appointment",
+                "operationId": "0cfd7a3482605b745b634d591966d8bf",
+                "responses": {
+                    "201": {
+                        "description": "Appointment created"
                     }
                 }
             }
         },
-        "/api/doctors/{doctor}": {
+        "/appointments/{appointment}": {
+            "put": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Update an appointment",
+                "operationId": "6d90dc585178baa81c3ab129afe924ec",
+                "parameters": [
+                    {
+                        "name": "appointment",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointment updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Delete an appointment",
+                "operationId": "d2e4aef8da50e5d82f441ed65ea4700d",
+                "parameters": [
+                    {
+                        "name": "appointment",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Appointment deleted"
+                    }
+                }
+            }
+        },
+        "/doctors": {
+            "get": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Get list of doctors",
+                "operationId": "cd066ac893c261ef13773c81ebc8c53e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Create a new doctor",
+                "operationId": "08504526ddafe7c7f25782a3b582fb29",
+                "responses": {
+                    "201": {
+                        "description": "Doctor created"
+                    }
+                }
+            }
+        },
+        "/doctors/{doctor}": {
             "put": {
                 "tags": [
                     "Doctors"
                 ],
-                "operationId": "b9b359d73f884524c1609125b182c519",
+                "summary": "Update a doctor",
+                "operationId": "8567b03dce7c69a624a0896b5a1d8a4e",
                 "parameters": [
                     {
                         "name": "doctor",
@@ -34,24 +120,6 @@
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "specialization": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Doctor updated"
@@ -62,7 +130,8 @@
                 "tags": [
                     "Doctors"
                 ],
-                "operationId": "b224755e39ae1ed5c6e27758f0f44483",
+                "summary": "Delete a doctor",
+                "operationId": "4aef2104bf44af14814420dde8ee9cca",
                 "parameters": [
                     {
                         "name": "doctor",
@@ -80,15 +149,160 @@
                 }
             }
         },
-        "/api/patients": {
+        "/invoices": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Get list of invoices",
+                "operationId": "2918f8941342b3fb67e05747c84292d9",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Create a new invoice",
+                "operationId": "62ead27e7a908ee508c3f24b2319f43a",
+                "responses": {
+                    "201": {
+                        "description": "Invoice created"
+                    }
+                }
+            }
+        },
+        "/invoices/{invoice}": {
+            "put": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Update an invoice",
+                "operationId": "a40e07f5b2e5800f3ae9730319040d51",
+                "parameters": [
+                    {
+                        "name": "invoice",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Delete an invoice",
+                "operationId": "1a2cf0dde9ee2180fbdaf078b4329597",
+                "parameters": [
+                    {
+                        "name": "invoice",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invoice deleted"
+                    }
+                }
+            }
+        },
+        "/medications": {
+            "get": {
+                "tags": [
+                    "Medications"
+                ],
+                "summary": "Get list of medications",
+                "operationId": "00ef4bf1fc2b2ad04e089f8bd9a45eb1",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Medications"
+                ],
+                "summary": "Create a new medication",
+                "operationId": "32bd1896b9c92d5eca5f251a154eae0b",
+                "responses": {
+                    "201": {
+                        "description": "Medication created"
+                    }
+                }
+            }
+        },
+        "/medications/{medication}": {
+            "put": {
+                "tags": [
+                    "Medications"
+                ],
+                "summary": "Update a medication",
+                "operationId": "ef60cc2bbc9a140bf9aecb4137b420cc",
+                "parameters": [
+                    {
+                        "name": "medication",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Medication updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Medications"
+                ],
+                "summary": "Delete a medication",
+                "operationId": "3187b422dd4432a8f840b4a9e77f80d3",
+                "parameters": [
+                    {
+                        "name": "medication",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Medication deleted"
+                    }
+                }
+            }
+        },
+        "/patients": {
             "get": {
                 "tags": [
                     "Patients"
                 ],
-                "operationId": "4a397b69598fdd620ee7120b8610185b",
+                "summary": "Get list of patients",
+                "operationId": "90275bb01ca424c9f43eba1310bcfc31",
                 "responses": {
                     "200": {
-                        "description": "A patients endpoint"
+                        "description": "Successful operation"
                     }
                 }
             },
@@ -96,35 +310,8 @@
                 "tags": [
                     "Patients"
                 ],
-                "operationId": "d81c0f99b503153ba6d47c7899a882a4",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "John Doe"
-                                    },
-                                    "age": {
-                                        "type": "integer",
-                                        "example": 30
-                                    },
-                                    "gender": {
-                                        "type": "string",
-                                        "example": "Male"
-                                    },
-                                    "address": {
-                                        "type": "string",
-                                        "example": "123 Main St"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
+                "summary": "Create a new patient",
+                "operationId": "f339d0077ba97fd7c2dcf90987d9b0cb",
                 "responses": {
                     "201": {
                         "description": "Patient created"
@@ -132,12 +319,13 @@
                 }
             }
         },
-        "/api/patients/{patient}": {
+        "/patients/{patient}": {
             "put": {
                 "tags": [
                     "Patients"
                 ],
-                "operationId": "18504a6046ba0359d94ad6749b840931",
+                "summary": "Update a patient",
+                "operationId": "77c375326210f241e7e72e2e96795148",
                 "parameters": [
                     {
                         "name": "patient",
@@ -148,30 +336,6 @@
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "age": {
-                                        "type": "integer"
-                                    },
-                                    "gender": {
-                                        "type": "string"
-                                    },
-                                    "address": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Patient updated"
@@ -182,7 +346,8 @@
                 "tags": [
                     "Patients"
                 ],
-                "operationId": "1c9bebd2827e52b62fb5467aaea126ca",
+                "summary": "Delete a patient",
+                "operationId": "1ef1fdeaafba09c2635d2abffc2291de",
                 "parameters": [
                     {
                         "name": "patient",
@@ -200,118 +365,294 @@
                 }
             }
         },
-        "/register": {
-            "post": {
+        "/payments": {
+            "get": {
                 "tags": [
-                    "Auth"
+                    "Payments"
                 ],
-                "summary": "Register a new user",
-                "requestBody": {
-                "required": true,
-                "content": {
-                    "application/json": {
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                        "name": {
-                            "type": "string",
-                            "example": "John Doe"
-                        },
-                        "email": {
-                            "type": "string",
-                            "format": "email",
-                            "example": "user@example.com"
-                        },
-                        "password": {
-                            "type": "string",
-                            "format": "password",
-                            "example": "password"
-                        },
-                        "password_confirmation": {
-                            "type": "string",
-                            "format": "password",
-                            "example": "password"
-                        }
-                        },
-                        "required": ["name", "email", "password", "password_confirmation"]
-                    }
-                    }
-                }
-                },
+                "summary": "Get list of payments",
+                "operationId": "65567ad73dd4b0cc01c4856a6bb7e600",
                 "responses": {
-                "201": {
-                    "description": "User registered successfully"
-                },
-                "422": {
-                    "description": "Validation error"
-                },
-                "500": {
-                    "description": "Internal Server Error"
+                    "200": {
+                        "description": "Successful operation"
+                    }
                 }
-                }
-            }
             },
-            "/login": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "Payments"
                 ],
-                "summary": "Login a user",
-                "requestBody": {
-                "required": true,
-                "content": {
-                    "application/json": {
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                        "email": {
-                            "type": "string",
-                            "format": "email",
-                            "example": "user@example.com"
-                        },
-                        "password": {
-                            "type": "string",
-                            "format": "password",
-                            "example": "password"
+                "summary": "Create a new payment",
+                "operationId": "3cb7bc2c2ad5498b4ad9521811750cc1",
+                "responses": {
+                    "201": {
+                        "description": "Payment created"
+                    }
+                }
+            }
+        },
+        "/payments/{payment}": {
+            "put": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Update a payment",
+                "operationId": "5e6ce68c765bfba967264070023c3122",
+                "parameters": [
+                    {
+                        "name": "payment",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
                         }
-                        },
-                        "required": ["email", "password"]
                     }
-                    }
-                }
-                },
+                ],
                 "responses": {
-                "200": {
-                    "description": "User logged in successfully"
-                },
-                "401": {
-                    "description": "Invalid credentials"
-                },
-                "500": {
-                    "description": "Internal Server Error"
+                    "200": {
+                        "description": "Payment updated"
+                    }
                 }
+            },
+            "delete": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Delete a payment",
+                "operationId": "10dde42bcf9365c33158aa3c769af513",
+                "parameters": [
+                    {
+                        "name": "payment",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Payment deleted"
+                    }
                 }
             }
+        },
+        "/prescriptions": {
+            "get": {
+                "tags": [
+                    "Prescriptions"
+                ],
+                "summary": "Get list of prescriptions",
+                "operationId": "6f81a8cb1b4153b93c0d3c1450f7b823",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
             },
-            "/logout": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "Prescriptions"
                 ],
-                "summary": "Logout a user",
+                "summary": "Create a new prescription",
+                "operationId": "3845b7504183aee36f642918a2697758",
                 "responses": {
-                "200": {
-                    "description": "User logged out successfully"
-                },
-                "401": {
-                    "description": "Unauthorized"
-                },
-                "500": {
-                    "description": "Internal Server Error"
-                }
+                    "201": {
+                        "description": "Prescription created"
+                    }
                 }
             }
+        },
+        "/prescriptions/{prescription}": {
+            "put": {
+                "tags": [
+                    "Prescriptions"
+                ],
+                "summary": "Update a prescription",
+                "operationId": "fbb6a319782fc9b0defdb4d6dc71d2c7",
+                "parameters": [
+                    {
+                        "name": "prescription",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Prescription updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Prescriptions"
+                ],
+                "summary": "Delete a prescription",
+                "operationId": "f612936e5058ab2da31227ecab9d85d6",
+                "parameters": [
+                    {
+                        "name": "prescription",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Prescription deleted"
+                    }
+                }
             }
+        },
+        "/rooms": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get list of rooms",
+                "operationId": "fc04f85434400dbf0e26d2ec77a5878d",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Create a new room",
+                "operationId": "afb43684c849533c65e931df636b4de6",
+                "responses": {
+                    "201": {
+                        "description": "Room created"
+                    }
+                }
+            }
+        },
+        "/rooms/{room}": {
+            "put": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Update a room",
+                "operationId": "92aa8019b40cb4324223ff1dbec0d091",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Delete a room",
+                "operationId": "9379b2428c4e684a05dc9a71d9ee894e",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Room deleted"
+                    }
+                }
+            }
+        },
+        "/treatments": {
+            "get": {
+                "tags": [
+                    "Treatments"
+                ],
+                "summary": "Get list of treatments",
+                "operationId": "87d07501682135ff9fd87ba478c8d47e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Treatments"
+                ],
+                "summary": "Create a new treatment",
+                "operationId": "4f2e6d1b91fa537f9109b172652955ec",
+                "responses": {
+                    "201": {
+                        "description": "Treatment created"
+                    }
+                }
+            }
+        },
+        "/treatments/{treatment}": {
+            "put": {
+                "tags": [
+                    "Treatments"
+                ],
+                "summary": "Update a treatment",
+                "operationId": "6a9823a9e505f881085f7511fada3335",
+                "parameters": [
+                    {
+                        "name": "treatment",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Treatment updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Treatments"
+                ],
+                "summary": "Delete a treatment",
+                "operationId": "18df29b45b34bdf4565f900d595f48c4",
+                "parameters": [
+                    {
+                        "name": "treatment",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Treatment deleted"
+                    }
+                }
+            }
+        }
     },
     "components": {
         "securitySchemes": {
@@ -326,13 +667,40 @@
     },
     "tags": [
         {
-            "name": "Doctors"
+            "name": "Appointments",
+            "description": "API Endpoints for Appointments"
         },
         {
-            "name": "Patients"
+            "name": "Doctors",
+            "description": "API Endpoints for Doctors"
         },
         {
-            "name": "Auth"
+            "name": "Invoices",
+            "description": "API Endpoints for Invoices"
+        },
+        {
+            "name": "Medications",
+            "description": "API Endpoints for Medications"
+        },
+        {
+            "name": "Patients",
+            "description": "API Endpoints for Patients"
+        },
+        {
+            "name": "Payments",
+            "description": "API Endpoints for Payments"
+        },
+        {
+            "name": "Prescriptions",
+            "description": "API Endpoints for Prescriptions"
+        },
+        {
+            "name": "Rooms",
+            "description": "API Endpoints for Rooms"
+        },
+        {
+            "name": "Treatments",
+            "description": "API Endpoints for Treatments"
         }
     ]
 }
