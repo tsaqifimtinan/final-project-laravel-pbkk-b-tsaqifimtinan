@@ -165,30 +165,35 @@ const toggleAddPrescriptionForm = () => {
 };
 
 const submitPrescriptionForm = async () => {
-    const payload = {
+    const prescriptionData = {
         patient_id: newPrescription.value.patient_id,
         prescription_name: newPrescription.value.prescription_name,
         description: newPrescription.value.description,
         prescription_date: newPrescription.value.prescription_date,
     };
 
+    console.log('Submitting prescription data:', prescriptionData); // Log the data being sent
+
     try {
         const response = await fetch('/api/prescriptions', {
             method: 'POST',
-            body: JSON.stringify(payload), // Send JSON payload
             headers: {
-                'Content-Type': 'application/json', // Set Content-Type header to application/json
+                'Content-Type': 'application/json',
             },
+            body: JSON.stringify(prescriptionData),
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Server error:', errorData);
-            throw new Error('Error adding prescription');
+            console.error('Error adding prescription:', response.status, response.statusText);
+            const errorText = await response.text();
+            console.error('Error response text:', errorText);
+            return;
         }
 
-        await fetchPrescriptions(currentPage.value); // Fetch the latest prescriptions after successful submission
-        resetForm(); // Clear the form after successful submission
+        const data = await response.json();
+        console.log('Prescription added:', data);
+        resetForm();
+        await fetchPrescriptions(currentPage.value); // Fetch the newest data and display the last opened page
     } catch (error) {
         console.error('Error adding prescription:', error);
     }

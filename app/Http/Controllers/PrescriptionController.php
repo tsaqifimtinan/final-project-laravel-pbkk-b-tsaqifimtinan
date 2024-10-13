@@ -42,7 +42,7 @@ class PrescriptionController {
         try {
             $validatedData = $request->validate([
                 'patient_id' => 'required|integer',
-                'prescription_name' => 'required|integer',
+                'prescription_name' => 'required|string',
                 'prescription_date' => 'required|date',
                 'description' => 'nullable|string',
             ]);
